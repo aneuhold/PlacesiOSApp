@@ -13,6 +13,8 @@
 		0D38796D235D2C7900AD7BDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D38796C235D2C7900AD7BDA /* Assets.xcassets */; };
 		0D387970235D2C7900AD7BDA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D38796E235D2C7900AD7BDA /* LaunchScreen.storyboard */; };
 		0D38797B235D2C7900AD7BDA /* PlacesiOSAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D38797A235D2C7900AD7BDA /* PlacesiOSAppTests.swift */; };
+		0D387986235DE43700AD7BDA /* PlaceDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D387985235DE43700AD7BDA /* PlaceDescription.swift */; };
+		0D6D11DB236A04C600A2714C /* PlaceLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6D11DA236A04C600A2714C /* PlaceLibrary.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +38,8 @@
 		0D387976235D2C7900AD7BDA /* PlacesiOSAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlacesiOSAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D38797A235D2C7900AD7BDA /* PlacesiOSAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesiOSAppTests.swift; sourceTree = "<group>"; };
 		0D38797C235D2C7900AD7BDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0D387985235DE43700AD7BDA /* PlaceDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDescription.swift; sourceTree = "<group>"; };
+		0D6D11DA236A04C600A2714C /* PlaceLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceLibrary.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,12 +81,15 @@
 		0D387964235D2C7800AD7BDA /* PlacesiOSApp */ = {
 			isa = PBXGroup;
 			children = (
+				0D6D11DC236A04DD00A2714C /* Model */,
 				0D387965235D2C7800AD7BDA /* AppDelegate.swift */,
 				0D387967235D2C7800AD7BDA /* ViewController.swift */,
+				0D387985235DE43700AD7BDA /* PlaceDescription.swift */,
 				0D387969235D2C7800AD7BDA /* Main.storyboard */,
 				0D38796C235D2C7900AD7BDA /* Assets.xcassets */,
 				0D38796E235D2C7900AD7BDA /* LaunchScreen.storyboard */,
 				0D387971235D2C7900AD7BDA /* Info.plist */,
+				0D6D11DA236A04C600A2714C /* PlaceLibrary.swift */,
 			);
 			path = PlacesiOSApp;
 			sourceTree = "<group>";
@@ -94,6 +101,13 @@
 				0D38797C235D2C7900AD7BDA /* Info.plist */,
 			);
 			path = PlacesiOSAppTests;
+			sourceTree = "<group>";
+		};
+		0D6D11DC236A04DD00A2714C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,7 +212,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D387968235D2C7800AD7BDA /* ViewController.swift in Sources */,
+				0D387986235DE43700AD7BDA /* PlaceDescription.swift in Sources */,
 				0D387966235D2C7800AD7BDA /* AppDelegate.swift in Sources */,
+				0D6D11DB236A04C600A2714C /* PlaceLibrary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

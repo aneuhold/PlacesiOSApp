@@ -1,5 +1,3 @@
-import UIKit
-
 /**
  * Copyright 2019 Anton G Neuhold Jr,
  *
@@ -21,13 +19,5 @@ import UIKit
  *         Software Engineering
  * @version October 20, 2019
  */
-class ViewController: UIViewController {
 
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    // Do any additional setup after loading the view, typically from a nib.
-  }
-
-
-}
-
+import Foundation

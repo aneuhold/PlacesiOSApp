@@ -1,18 +1,30 @@
-//
-//  AppDelegate.swift
-//  PlacesiOSApp
-//
-//  Created by Anton G Neuhold Jr on 10/20/19.
-//  Copyright © 2019 Anton G Neuhold Jr. All rights reserved.
-//
-
 import UIKit
 
+/**
+ * Copyright 2019 Anton G Neuhold Jr,
+ *
+ * This software is the intellectual property of the author, and can not be
+ * distributed, used, copied, or reproduced, in whole or in part, for any
+ * purpose, commercial or otherwise. The author grants the ASU Software
+ * Engineering program the right to copy, execute, and evaluate this work for
+ * the purpose of determining performance of the author in coursework, and for
+ * Software Engineering program evaluation, so long as this copyright and
+ * right-to-use statement is kept in-tact in such use. All other uses are
+ * prohibited and reserved to the author.<br>
+ * <br>
+ *
+ * Purpose: CHANGE ME
+ *
+ * SER 423
+ * see http://quay.poly.asu.edu/Mobile/
+ * @author Anton Neuhold mailto:aneuhold@asu.edu
+ *         Software Engineering
+ * @version October 20, 2019
+ */
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
-
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
