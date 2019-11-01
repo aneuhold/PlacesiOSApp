@@ -31,22 +31,30 @@ class PlaceDescription {
   var latitude: Double?
   var longitude: Double?
   
-  init (jsonStr: String) {
+  convenience init (jsonStr: String) {
     if let data: Data = jsonStr.data(using: String.Encoding.utf8){
       do{
         let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:Any]
-        self.name = (dict!["name"] as? String)!
-        self.description = (dict!["description"] as? String)!
-        self.category = (dict!["category"] as? String)!
-        self.addressTitle = (dict!["address-title"] as? String)!
-        self.addressStreet = (dict!["address-street"] as? String)!
-        self.elevation = (dict!["elevation"] as? Double)!
-        self.latitude = (dict!["latitude"] as? Double)!
-        self.longitude = (dict!["longitude"] as? Double)!
+        self.init(jsonObjDict: dict)
       } catch {
         print("unable to convert to dictionary")
       }
     }
+  }
+  
+  /**
+   Initialize the PlaceDescription object with a provided dictionary which is
+   an already parsed JSON Object of the correct format.
+   */
+  init (jsonObjDict dict: [String:Any]?) {
+    self.name = (dict!["name"] as? String)!
+    self.description = (dict!["description"] as? String)!
+    self.category = (dict!["category"] as? String)!
+    self.addressTitle = (dict!["address-title"] as? String)!
+    self.addressStreet = (dict!["address-street"] as? String)!
+    self.elevation = (dict!["elevation"] as? Double)!
+    self.latitude = (dict!["latitude"] as? Double)!
+    self.longitude = (dict!["longitude"] as? Double)!
   }
   
   func toJsonString() -> String {

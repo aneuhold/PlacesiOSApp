@@ -1,3 +1,6 @@
+
+import UIKit
+
 /**
  * Copyright 2019 Anton G Neuhold Jr,
  *
@@ -13,11 +16,11 @@
  *
  * Purpose: CHANGE ME
  *
- * SER 423
- * see http://quay.poly.asu.edu/Mobile/
+ * SER 423 see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version October 20, 2019
+ * @version October 30, 2019
  */
-
-import Foundation
+class PlacesTableViewController: UITableViewController {
+  
+}

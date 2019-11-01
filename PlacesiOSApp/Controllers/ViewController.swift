@@ -21,13 +21,29 @@ import UIKit
  *         Software Engineering
  * @version October 20, 2019
  */
-class ViewController: UIViewController {
-
+class ViewController: UIViewController, UITableViewDataSource {
+  
+  var places: PlaceLibrary = PlaceLibrary()
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    // Do any additional setup after loading the view, typically from a nib.
   }
-
-
+  
+  
+  
+  // MARK: - UITableViewDataSource methods
+  
+  /**
+   Returns the number of rows in the given section. In this particular class,
+   it will return the number of entries in the place library.
+   */
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return 1
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    <#code#>
+  }
+  
 }
 
