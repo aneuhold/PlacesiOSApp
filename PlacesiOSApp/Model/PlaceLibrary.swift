@@ -21,7 +21,7 @@ import Foundation
  * @version October 30, 2019
  */
 class PlaceLibrary {
-  var placeDescriptions: [PlaceDescription]
+  private var placeDescriptions: [PlaceDescription] = [PlaceDescription]()
   
   init() {
     
@@ -51,5 +51,13 @@ class PlaceLibrary {
         print("Contents of places.json could not be loaded")
       }
     }
+  }
+  
+  func getPlaceAt(_ index: Int) -> PlaceDescription {
+    return placeDescriptions[index]
+  }
+  
+  func size() -> Int {
+    return placeDescriptions.count;
   }
 }

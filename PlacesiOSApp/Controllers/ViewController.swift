@@ -21,15 +21,13 @@ import UIKit
  *         Software Engineering
  * @version October 20, 2019
  */
-class ViewController: UIViewController, UITableViewDataSource {
+class ViewController: UITabBarController, UITableViewDataSource {
   
   var places: PlaceLibrary = PlaceLibrary()
   
   override func viewDidLoad() {
     super.viewDidLoad()
   }
-  
-  
   
   // MARK: - UITableViewDataSource methods
   
@@ -38,11 +36,16 @@ class ViewController: UIViewController, UITableViewDataSource {
    it will return the number of entries in the place library.
    */
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 1
+    return places.size()
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    <#code#>
+    
+    // Get and configure the cell...
+    let cell = tableView.dequeueReusableCell(withIdentifier: "placeCell", for: indexPath)
+    let aPlace = places.getPlaceAt(indexPath.row)
+    cell.textLabel?.text = aPlace.name
+    return cell
   }
   
 }

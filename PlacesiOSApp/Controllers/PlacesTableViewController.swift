@@ -23,4 +23,18 @@ import UIKit
  */
 class PlacesTableViewController: UITableViewController {
   
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    // This will create a reference to the tab bar controller of the app which also implements the UITableViewDataSource protocol.
+    tableView.dataSource = tabBarController as? UITableViewDataSource
+  }
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if (segue.identifier == "Place") {
+      let viewController: ViewController = segue.destination as! ViewController
+      let indexPath = 
+    }
+  }
+
 }

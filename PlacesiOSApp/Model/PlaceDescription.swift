@@ -22,20 +22,27 @@ import Foundation
  * @version October 20, 2019
  */
 class PlaceDescription {
-  var name: String?
-  var description: String?
-  var category: String?
-  var addressTitle: String?
-  var addressStreet: String?
-  var elevation: Double?
-  var latitude: Double?
-  var longitude: Double?
+  var name: String = ""
+  var description: String? = ""
+  var category: String? = ""
+  var addressTitle: String? = ""
+  var addressStreet: String? = ""
+  var elevation: Double? = 0
+  var latitude: Double? = 0
+  var longitude: Double? = 0
   
-  convenience init (jsonStr: String) {
+  init (jsonStr: String) {
     if let data: Data = jsonStr.data(using: String.Encoding.utf8){
       do{
         let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:Any]
-        self.init(jsonObjDict: dict)
+        self.name = (dict!["name"] as? String)!
+        self.description = (dict!["description"] as? String)!
+        self.category = (dict!["category"] as? String)!
+        self.addressTitle = (dict!["address-title"] as? String)!
+        self.addressStreet = (dict!["address-street"] as? String)!
+        self.elevation = (dict!["elevation"] as? Double)!
+        self.latitude = (dict!["latitude"] as? Double)!
+        self.longitude = (dict!["longitude"] as? Double)!
       } catch {
         print("unable to convert to dictionary")
       }
