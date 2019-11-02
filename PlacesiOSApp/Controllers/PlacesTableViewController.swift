@@ -22,18 +22,30 @@ import UIKit
  * @version October 30, 2019
  */
 class PlacesTableViewController: UITableViewController {
+  var viewController: ViewController?
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    // This will create a reference to the tab bar controller of the app which also implements the UITableViewDataSource protocol.
-    tableView.dataSource = tabBarController as? UITableViewDataSource
+    // This will create a reference to the tab bar controller of the app which holds most of the data for the app
+    viewController = tabBarController as? ViewController
+    
+    // Set the data source for the UITableView
+    tableView.dataSource = viewController
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    if (segue.identifier == "Place") {
-      let viewController: ViewController = segue.destination as! ViewController
-      let indexPath = 
+    if (segue.identifier == "PlaceDescriptionSegue") {
+      
+      // Get a reference to the target UIViewController
+      let placeDetailsViewController: PlaceDetailsViewController
+        = segue.destination as! PlaceDetailsViewController
+      
+      let indexPath = self.tableView.indexPathForSelectedRow!
+      
+      // Set the needed information inside the new place details view
+      placeDetailsViewController.placeDescription
+        = viewController!.places.getPlaceAt(indexPath.row)
     }
   }
 

@@ -70,7 +70,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="zxs-TF-4kl" kind="showDetail" identifier="PlaceDescriptionSegue" id="px0-4Y-1ED"/>
+                                    <segue destination="zxs-TF-4kl" kind="show" identifier="PlaceDescriptionSegue" id="px0-4Y-1ED"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -88,16 +88,16 @@
         <!--Place Description-->
         <scene sceneID="Qx1-Ya-BsR">
             <objects>
-                <viewController title="Place Description" id="zxs-TF-4kl" sceneMemberID="viewController">
+                <viewController title="Place Description" id="zxs-TF-4kl" customClass="PlaceDetailsViewController" customModule="PlacesiOSApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7XD-ry-mJv">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="900"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cGj-4z-ByX">
-                                <rect key="frame" x="0.0" y="20" width="375" height="880"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cGj-4z-ByX">
+                                <rect key="frame" x="0.0" y="64" width="375" height="602"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vMM-Vz-5HR">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="880"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="602"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Place Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cSH-M8-LzC">
                                                 <rect key="frame" x="8" y="8" width="92" height="21"/>
@@ -157,7 +157,7 @@
                                                 <rect key="frame" x="8" y="305" width="359" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                                <textInputTraits key="textInputTraits" returnKeyType="done" textContentType="street-address"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Elevation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CZl-6z-AYc">
                                                 <rect key="frame" x="8" y="343" width="70" height="21"/>
@@ -169,7 +169,7 @@
                                                 <rect key="frame" x="8" y="372" width="359" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="decimalPad" returnKeyType="done"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Latitude" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bqi-A1-cbl">
                                                 <rect key="frame" x="8" y="410" width="63" height="21"/>
@@ -181,7 +181,7 @@
                                                 <rect key="frame" x="8" y="439" width="359" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="decimalPad" returnKeyType="done"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Longitude" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7dV-Rv-7IG">
                                                 <rect key="frame" x="8" y="477" width="76.5" height="21"/>
@@ -193,7 +193,7 @@
                                                 <rect key="frame" x="8" y="506" width="359" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="decimalPad" returnKeyType="done"/>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rjY-SS-CCl">
                                                 <rect key="frame" x="8" y="552" width="359" height="30"/>
@@ -224,6 +224,7 @@
                                             <constraint firstItem="6bd-us-XJw" firstAttribute="top" secondItem="cSH-M8-LzC" secondAttribute="bottom" constant="8" id="Roo-Vw-Ebe"/>
                                             <constraint firstAttribute="trailing" secondItem="5e5-Xu-4ke" secondAttribute="trailing" constant="8" id="UfU-eR-3Uf"/>
                                             <constraint firstItem="SM2-yx-CdZ" firstAttribute="top" secondItem="CZl-6z-AYc" secondAttribute="bottom" constant="8" id="WRR-uv-EZK"/>
+                                            <constraint firstAttribute="bottom" secondItem="rjY-SS-CCl" secondAttribute="bottom" constant="20" id="WTw-xW-8hz"/>
                                             <constraint firstAttribute="trailing" secondItem="rjY-SS-CCl" secondAttribute="trailing" constant="8" id="XEX-K7-rSj"/>
                                             <constraint firstItem="5e5-Xu-4ke" firstAttribute="leading" secondItem="vMM-Vz-5HR" secondAttribute="leading" constant="8" id="XXI-Ky-s9S"/>
                                             <constraint firstItem="rqe-Js-Ur3" firstAttribute="leading" secondItem="vMM-Vz-5HR" secondAttribute="leading" constant="8" id="YFG-8D-7x5"/>
@@ -249,8 +250,7 @@
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="vMM-Vz-5HR" firstAttribute="centerX" secondItem="cGj-4z-ByX" secondAttribute="centerX" id="DUS-MH-65X"/>
-                                    <constraint firstItem="vMM-Vz-5HR" firstAttribute="centerY" secondItem="cGj-4z-ByX" secondAttribute="centerY" id="NSF-wg-XmU"/>
+                                    <constraint firstItem="vMM-Vz-5HR" firstAttribute="width" secondItem="cGj-4z-ByX" secondAttribute="width" id="0te-hZ-DBR"/>
                                     <constraint firstAttribute="trailing" secondItem="vMM-Vz-5HR" secondAttribute="trailing" id="PW3-kA-6zc"/>
                                     <constraint firstItem="vMM-Vz-5HR" firstAttribute="top" secondItem="cGj-4z-ByX" secondAttribute="top" id="a97-kj-eRe"/>
                                     <constraint firstAttribute="bottom" secondItem="vMM-Vz-5HR" secondAttribute="bottom" id="jlX-6s-F7Y"/>
@@ -269,10 +269,21 @@
                         <viewLayoutGuide key="safeArea" id="Sc7-wF-9YV"/>
                     </view>
                     <size key="freeformSize" width="375" height="900"/>
+                    <connections>
+                        <outlet property="placeAddressStreetTextField" destination="w6N-kV-0Ns" id="bDa-Qw-3tX"/>
+                        <outlet property="placeAddressTitleTextField" destination="pxS-Hs-ace" id="3Bb-gv-L7k"/>
+                        <outlet property="placeCategoryTextField" destination="5pO-gP-sYa" id="hzc-PP-76l"/>
+                        <outlet property="placeDescriptionTextField" destination="Jyz-Od-PB8" id="Z2C-RX-mXp"/>
+                        <outlet property="placeElevationTextField" destination="SM2-yx-CdZ" id="zva-tj-l6B"/>
+                        <outlet property="placeLatitudeTextField" destination="5e5-Xu-4ke" id="81x-Ca-a26"/>
+                        <outlet property="placeLongitudeTextField" destination="mZ6-YI-G87" id="LXf-Ua-Vu4"/>
+                        <outlet property="placeNameTextField" destination="6bd-us-XJw" id="iYt-er-D0L"/>
+                        <outlet property="scrollView" destination="cGj-4z-ByX" id="beE-Dp-FTy"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7id-8j-Epy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="737" y="-681"/>
+            <point key="canvasLocation" x="736.79999999999995" y="-681.85907046476768"/>
         </scene>
         <!--Places-->
         <scene sceneID="VdQ-Jp-Y2R">
