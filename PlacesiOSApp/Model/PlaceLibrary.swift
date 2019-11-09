@@ -57,6 +57,28 @@ class PlaceLibrary {
     return placeDescriptions[index]
   }
   
+  func getPlaceWithName(_ name: String) -> PlaceDescription {
+    for placeDescription in placeDescriptions {
+      if (placeDescription.name == name) {
+        return placeDescription
+      }
+    }
+    print("PlaceDescription with name " + name + " was not found.")
+    return PlaceDescription()
+  }
+  
+  func setPlaceAt(_ index: Int, newPlaceDescription: PlaceDescription) {
+    placeDescriptions[index] = newPlaceDescription
+  }
+  
+  func removePlaceAt(_ index: Int) {
+    placeDescriptions.remove(at: index)
+  }
+  
+  func addPlace(newPlaceDescription: PlaceDescription) {
+    placeDescriptions.append(newPlaceDescription)
+  }
+  
   func size() -> Int {
     return placeDescriptions.count;
   }

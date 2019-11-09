@@ -31,6 +31,10 @@ class PlaceDescription {
   var latitude: Double? = 0
   var longitude: Double? = 0
   
+  init () {
+    var name = "Unknown"
+  }
+  
   init (jsonStr: String) {
     if let data: Data = jsonStr.data(using: String.Encoding.utf8){
       do{

@@ -1,7 +1,35 @@
 import UIKit
 
+/**
+ * Copyright 2019 Anton G Neuhold Jr,
+ *
+ * This software is the intellectual property of the author, and can not be
+ * distributed, used, copied, or reproduced, in whole or in part, for any
+ * purpose, commercial or otherwise. The author grants the ASU Software
+ * Engineering program the right to copy, execute, and evaluate this work for
+ * the purpose of determining performance of the author in coursework, and for
+ * Software Engineering program evaluation, so long as this copyright and
+ * right-to-use statement is kept in-tact in such use. All other uses are
+ * prohibited and reserved to the author.<br>
+ * <br>
+ *
+ * Purpose: CHANGE ME
+ *
+ * SER 423 see http://quay.poly.asu.edu/Mobile/
+ * @author Anton Neuhold mailto:aneuhold@asu.edu
+ *         Software Engineering
+ * @version October 30, 2019
+ */
 class PlaceDetailsViewController: UIViewController {
   var placeDescription: PlaceDescription?
+  var viewController: ViewController?
+  
+  /*
+   This is the index of the placeDescription within the places object at the
+   top level view controller.
+   */
+  var currentPlaceIndex: Int?
+  
   @IBOutlet weak var placeNameTextField: UITextField!
   @IBOutlet weak var placeDescriptionTextField: UITextField!
   @IBOutlet weak var placeCategoryTextField: UITextField!
@@ -15,9 +43,12 @@ class PlaceDetailsViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    // Create a reference to the main view controller. For Data!
+    viewController = tabBarController as? ViewController
+    
     hydratePlaceDescriptionViews()
 
-    // TODO: Do something about the keyboard hiding the content
+    // Do something about the keyboard hiding the content
     let notificationCenter = NotificationCenter.default
     notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard),
                                    name: UIResponder.keyboardWillHideNotification,
@@ -52,4 +83,23 @@ class PlaceDetailsViewController: UIViewController {
     placeLatitudeTextField.text = String(format: "%f",(placeDescription?.latitude)!)
     placeLongitudeTextField.text = String(format: "%f",(placeDescription?.longitude)!)
   }
+  
+  @IBAction func onDonePress(_ sender: UIButton) {
+    
+    // Set all of the PlaceDescription values
+    placeDescription?.description = placeDescriptionTextField.text
+    placeDescription?.category = placeCategoryTextField.text
+    placeDescription?.addressTitle = placeAddressTitleTextField.text
+    placeDescription?.addressStreet = placeAddressStreetTextField.text
+    placeDescription?.elevation = (placeElevationTextField.text! as NSString).doubleValue
+    placeDescription?.latitude = (placeLatitudeTextField.text! as NSString).doubleValue
+    placeDescription?.longitude = (placeLongitudeTextField.text! as NSString).doubleValue
+
+    viewController?.places.setPlaceAt(currentPlaceIndex!,
+                                      newPlaceDescription: placeDescription!)
+    
+    // Dismiss this view controller
+    self.navigationController?.popViewController(animated: true)
+  }
+  
 }

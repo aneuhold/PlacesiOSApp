@@ -13,11 +13,13 @@
 		0D38796D235D2C7900AD7BDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D38796C235D2C7900AD7BDA /* Assets.xcassets */; };
 		0D387970235D2C7900AD7BDA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D38796E235D2C7900AD7BDA /* LaunchScreen.storyboard */; };
 		0D38797B235D2C7900AD7BDA /* PlacesiOSAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D38797A235D2C7900AD7BDA /* PlacesiOSAppTests.swift */; };
+		0D5DB28623776BE300FA256C /* PlaceLibraryStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5DB28523776BE300FA256C /* PlaceLibraryStub.swift */; };
 		0D6D11E0236A32FB00A2714C /* PlaceLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6D11DA236A04C600A2714C /* PlaceLibrary.swift */; };
 		0D6D11E1236A330100A2714C /* PlaceDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D387985235DE43700AD7BDA /* PlaceDescription.swift */; };
 		0D6D11E4236B6DE400A2714C /* PlacesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6D11E3236B6DE400A2714C /* PlacesTableViewController.swift */; };
 		0D6D11E6236BAAEC00A2714C /* places.json in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D11E5236BAAEC00A2714C /* places.json */; };
 		0D6D11E8236CD10500A2714C /* PlaceDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6D11E7236CD10500A2714C /* PlaceDetailsViewController.swift */; };
+		0DFFA886236E1DB100FB9CB2 /* DistanceCalcViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFFA885236E1DB100FB9CB2 /* DistanceCalcViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,10 +44,12 @@
 		0D38797A235D2C7900AD7BDA /* PlacesiOSAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesiOSAppTests.swift; sourceTree = "<group>"; };
 		0D38797C235D2C7900AD7BDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0D387985235DE43700AD7BDA /* PlaceDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDescription.swift; sourceTree = "<group>"; };
+		0D5DB28523776BE300FA256C /* PlaceLibraryStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceLibraryStub.swift; sourceTree = "<group>"; };
 		0D6D11DA236A04C600A2714C /* PlaceLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceLibrary.swift; sourceTree = "<group>"; };
 		0D6D11E3236B6DE400A2714C /* PlacesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesTableViewController.swift; sourceTree = "<group>"; };
 		0D6D11E5236BAAEC00A2714C /* places.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = places.json; sourceTree = "<group>"; };
 		0D6D11E7236CD10500A2714C /* PlaceDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDetailsViewController.swift; sourceTree = "<group>"; };
+		0DFFA885236E1DB100FB9CB2 /* DistanceCalcViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCalcViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +117,7 @@
 				0D6D11E5236BAAEC00A2714C /* places.json */,
 				0D387985235DE43700AD7BDA /* PlaceDescription.swift */,
 				0D6D11DA236A04C600A2714C /* PlaceLibrary.swift */,
+				0D5DB28523776BE300FA256C /* PlaceLibraryStub.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -123,6 +128,7 @@
 				0D387967235D2C7800AD7BDA /* ViewController.swift */,
 				0D6D11E3236B6DE400A2714C /* PlacesTableViewController.swift */,
 				0D6D11E7236CD10500A2714C /* PlaceDetailsViewController.swift */,
+				0DFFA885236E1DB100FB9CB2 /* DistanceCalcViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -230,9 +236,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D6D11E8236CD10500A2714C /* PlaceDetailsViewController.swift in Sources */,
+				0D5DB28623776BE300FA256C /* PlaceLibraryStub.swift in Sources */,
 				0D6D11E1236A330100A2714C /* PlaceDescription.swift in Sources */,
 				0D6D11E0236A32FB00A2714C /* PlaceLibrary.swift in Sources */,
 				0D387968235D2C7800AD7BDA /* ViewController.swift in Sources */,
+				0DFFA886236E1DB100FB9CB2 /* DistanceCalcViewController.swift in Sources */,
 				0D387966235D2C7800AD7BDA /* AppDelegate.swift in Sources */,
 				0D6D11E4236B6DE400A2714C /* PlacesTableViewController.swift in Sources */,
 			);

@@ -48,5 +48,21 @@ class ViewController: UITabBarController, UITableViewDataSource {
     return cell
   }
   
+  func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    return true
+  }
+  
+  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    print("tableView editing row at: \(indexPath.row)")
+    if editingStyle == .delete {
+      print("The delete section of the code was entered")
+      places.removePlaceAt(indexPath.row)
+      
+      // Let the tableView know what is being deleted.
+      tableView.deleteRows(at: [indexPath], with: .fade)
+      // don't need to reload data, using delete to make update
+    }
+  }
+  
 }
 

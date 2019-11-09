@@ -32,6 +32,14 @@ class PlacesTableViewController: UITableViewController {
     
     // Set the data source for the UITableView
     tableView.dataSource = viewController
+    
+    // Add an edit button, which is handled by the func table view editing forRowAt
+    self.navigationItem.leftBarButtonItem = self.editButtonItem
+    
+    // place an add button on the right side of the nav bar for adding a student
+    // call addStudent function when clicked.
+    let addButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(PlacesTableViewController.addPlace))
+    self.navigationItem.rightBarButtonItem = addButton
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -46,7 +54,36 @@ class PlacesTableViewController: UITableViewController {
       // Set the needed information inside the new place details view
       placeDetailsViewController.placeDescription
         = viewController!.places.getPlaceAt(indexPath.row)
+      placeDetailsViewController.currentPlaceIndex = indexPath.row
     }
   }
+  
+  // Called with the Navigation Bar Add button (+) is clicked
+  @objc func addPlace() {
+    print("add button clicked")
+    
+    // Query the user for the new place name.
+    let promptND = UIAlertController(title: "New Place", message: "Enter New Place Name", preferredStyle: UIAlertController.Style.alert)
+    
+    // If the user cancels, we don't want to add a place
+    promptND.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
+    
+    // setup the OK action and provide a closure to be executed when/if OK selected
+    promptND.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (action) -> Void in
+      
+      // Want to provide default values for name
+      let newPlaceName:String = (promptND.textFields?[0].text == "") ?
+        "unknown" : (promptND.textFields?[0].text)!
 
+      // Create the new place
+      let newPlace:PlaceDescription = PlaceDescription()
+      newPlace.name = newPlaceName
+      self.viewController?.places.addPlace(newPlaceDescription: newPlace)
+      self.tableView.reloadData()
+    }))
+    promptND.addTextField(configurationHandler: {(textField: UITextField!) in
+      textField.placeholder = "Place Name"
+    })
+    present(promptND, animated: true, completion: nil)
+  }
 }
