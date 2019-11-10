@@ -103,7 +103,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="glG-NM-9Cq"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Distance" id="4JO-bZ-Pdd"/>
+                    <tabBarItem key="tabBarItem" title="Distance" image="Distance Calc" id="4JO-bZ-Pdd"/>
                     <connections>
                         <outlet property="bearingTextView" destination="PV1-W1-zmc" id="qW2-ny-kLc"/>
                         <outlet property="distanceTextView" destination="ZLg-Zz-Inl" id="S3D-lp-Y4b"/>
@@ -382,7 +382,7 @@
         <scene sceneID="VdQ-Jp-Y2R">
             <objects>
                 <navigationController id="XFq-8D-Wb5" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Places" id="Lul-t2-xRG"/>
+                    <tabBarItem key="tabBarItem" title="Places" image="Places Icon" id="Lul-t2-xRG"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="3Kt-l2-4Sd">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -396,4 +396,8 @@
             <point key="canvasLocation" x="-1097" y="-681"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Distance Calc" width="24" height="24"/>
+        <image name="Places Icon" width="19" height="19"/>
+    </resources>
 </document>
