@@ -19,6 +19,7 @@
 		0D6D11E4236B6DE400A2714C /* PlacesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6D11E3236B6DE400A2714C /* PlacesTableViewController.swift */; };
 		0D6D11E6236BAAEC00A2714C /* places.json in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D11E5236BAAEC00A2714C /* places.json */; };
 		0D6D11E8236CD10500A2714C /* PlaceDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6D11E7236CD10500A2714C /* PlaceDetailsViewController.swift */; };
+		0D838866237881CE00F8618A /* ServerInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D838865237881CE00F8618A /* ServerInfo.plist */; };
 		0DFFA886236E1DB100FB9CB2 /* DistanceCalcViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFFA885236E1DB100FB9CB2 /* DistanceCalcViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		0D6D11E3236B6DE400A2714C /* PlacesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesTableViewController.swift; sourceTree = "<group>"; };
 		0D6D11E5236BAAEC00A2714C /* places.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = places.json; sourceTree = "<group>"; };
 		0D6D11E7236CD10500A2714C /* PlaceDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDetailsViewController.swift; sourceTree = "<group>"; };
+		0D838865237881CE00F8618A /* ServerInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ServerInfo.plist; sourceTree = "<group>"; };
 		0DFFA885236E1DB100FB9CB2 /* DistanceCalcViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCalcViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,6 +100,7 @@
 				0D38796C235D2C7900AD7BDA /* Assets.xcassets */,
 				0D38796E235D2C7900AD7BDA /* LaunchScreen.storyboard */,
 				0D387971235D2C7900AD7BDA /* Info.plist */,
+				0D838865237881CE00F8618A /* ServerInfo.plist */,
 			);
 			path = PlacesiOSApp;
 			sourceTree = "<group>";
@@ -214,6 +217,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D838866237881CE00F8618A /* ServerInfo.plist in Resources */,
 				0D387970235D2C7900AD7BDA /* LaunchScreen.storyboard in Resources */,
 				0D38796D235D2C7900AD7BDA /* Assets.xcassets in Resources */,
 				0D38796B235D2C7800AD7BDA /* Main.storyboard in Resources */,
