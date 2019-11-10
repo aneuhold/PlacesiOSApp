@@ -117,8 +117,8 @@ class PlaceDetailsViewController: UIViewController {
     placeDescription?.latitude = (placeLatitudeTextField.text! as NSString).doubleValue
     placeDescription?.longitude = (placeLongitudeTextField.text! as NSString).doubleValue
 
-    //viewController?.places.setPlaceAt(currentPlaceIndex!,
-                                      //newPlaceDescription: placeDescription!)
+    // Modify the place on the server by deleting it first, then adding it back
+    viewController?.modifyPlace(placeDescription: self.placeDescription!)
     
     // Dismiss this view controller
     self.navigationController?.popViewController(animated: true)

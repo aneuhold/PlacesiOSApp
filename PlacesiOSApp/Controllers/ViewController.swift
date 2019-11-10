@@ -62,6 +62,29 @@ class ViewController: UITabBarController, UITableViewDataSource {
     }
   }
   
+  func modifyPlace(placeDescription: PlaceDescription) {
+    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
+    let _:Bool = placesConnect.remove(name: placeDescription.name, callback: {(res: String, err: String?) -> Void in
+      if err != nil {
+        NSLog(err!)
+      }else{
+        NSLog(res)
+        self.addAfterRemovingPlace(placeDescription: placeDescription)
+      }
+    })
+  }
+  
+  private func addAfterRemovingPlace(placeDescription: PlaceDescription) {
+    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
+    let _:Bool = placesConnect.add(placeDescription: placeDescription, callback: {(res: String, err: String?) -> Void in
+      if err != nil {
+        NSLog(err!)
+      }else{
+        NSLog(res)
+      }
+    })
+  }
+  
   // MARK: - UITableViewDataSource methods
   
   /*
