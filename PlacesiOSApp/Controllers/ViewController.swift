@@ -21,7 +21,7 @@ import UIKit
  *         Software Engineering
  * @version October 20, 2019
  */
-class ViewController: UITabBarController, UITableViewDataSource {
+class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDataSource {
   
   // var places: PlaceLibrary = PlaceLibrary()
   var placeNames: [String] = [String]()
@@ -83,6 +83,16 @@ class ViewController: UITabBarController, UITableViewDataSource {
         NSLog(res)
       }
     })
+  }
+  
+  // MARK: - UIPickerViewDataSource methods
+  
+  func numberOfComponents(in pickerView: UIPickerView) -> Int {
+    return 1
+  }
+  
+  func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    return placeNames.count
   }
   
   // MARK: - UITableViewDataSource methods
