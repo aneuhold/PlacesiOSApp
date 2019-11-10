@@ -88,8 +88,21 @@ class ViewController: UITabBarController, UITableViewDataSource {
     print("tableView editing row at: \(indexPath.row)")
     if editingStyle == .delete {
       
-      // TODO: Implement a place removal here
-      // places.removePlaceAt(indexPath.row)
+      // Get a reference to the place name
+      let placeName: String = placeNames[indexPath.row]
+      
+      // Remove the item locally
+      placeNames.remove(at: indexPath.row)
+      
+      // Remove the item on the server
+      let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
+      let _:Bool = placesConnect.remove(name: placeName, callback: {(res: String, err: String?) -> Void in
+        if err != nil {
+          NSLog(err!)
+        }else{
+          NSLog(res)
+        }
+      })
       
       // Let the tableView know what is being deleted.
       tableView.deleteRows(at: [indexPath], with: .fade)

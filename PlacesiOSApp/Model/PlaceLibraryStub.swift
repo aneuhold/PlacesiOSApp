@@ -105,6 +105,10 @@ public class PlaceLibraryStub {
     return prepareAsyncHttpPostJSON(params: [placeDescription.toJsonObj()], methodName: "add", callback: callback)
   }
   
+  func remove(name: String, callback:@escaping (String, String?) -> Void) -> Bool{
+    return prepareAsyncHttpPostJSON(params: [name], methodName: "remove", callback: callback)
+  }
+  
   // callbacks to getNames remote method may use this method to get the array of strings from the jsonrpc result string
   func getStringArrayResult(jsonRPCResult:String) -> [String] {
     var ret:[String] = [String]()
@@ -122,7 +126,7 @@ public class PlaceLibraryStub {
   
   // callbacks to get remote method may use this method to get the PlaceDescription from the jsonrpc result string
   func getPlaceDescriptionResult(jsonRPCResult:String) -> PlaceDescription {
-    var ret:PlaceDescription = PlaceDescription() 
+    var ret:PlaceDescription = PlaceDescription()
     if let data:NSData = jsonRPCResult.data(using:String.Encoding.utf8) as NSData?{
       do{
         let dict = try JSONSerialization.jsonObject(with: data as Data,options:.mutableContainers) as?[String:AnyObject]
