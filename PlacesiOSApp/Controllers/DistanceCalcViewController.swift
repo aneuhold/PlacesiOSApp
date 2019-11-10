@@ -14,12 +14,15 @@ import Foundation
  * prohibited and reserved to the author.<br>
  * <br>
  *
- * Purpose: CHANGE ME
+ * Purpose: Provides the view controller for the distance calculator. As the
+ * user changes the starting and ending location, the distance and bearing will
+ * be updated accordingly. 
  *
- * SER 423 see http://quay.poly.asu.edu/Mobile/
+ * SER 423
+ * see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version October 30, 2019
+ * @version November 10, 2019
  */
 class DistanceCalcViewController: UIViewController, UIPickerViewDelegate, UITextFieldDelegate {
   

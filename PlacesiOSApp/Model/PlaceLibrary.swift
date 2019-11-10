@@ -13,7 +13,8 @@ import Foundation
  * prohibited and reserved to the author.<br>
  * <br>
  *
- * Purpose: Extracts place dat from the places.json file held locally. Maybe.
+ * Purpose: This class is currently not used as the data for the app is
+ * retrieved from a remote JSON RPC server. 
  *
  * SER 423 see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu

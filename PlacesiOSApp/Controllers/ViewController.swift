@@ -13,13 +13,14 @@ import UIKit
  * prohibited and reserved to the author.<br>
  * <br>
  *
- * Purpose: CHANGE ME
+ * Purpose: Provides the main functionality for the iOS places app. The main
+ * view controller provides the data source for most of the application.
  *
  * SER 423
  * see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version October 20, 2019
+ * @version November 10, 2019
  */
 class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDataSource {
   
@@ -54,11 +55,10 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
     return "\(serverprotocol)://\(serverhost):\(jsonrpcport)"
   }
   
-  /*
+  /**
    Populates the placeNames variable using the PlaceLibraryStub class.
    */
   func populatePlaceNames() {
-    print("Entered populatePlaceNames method with the following urlString: \(urlString)")
     let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
     let _:Bool = placesConnect.getNames{(res: String, err: String?) -> Void in
       if err != nil {
@@ -68,7 +68,6 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
         if let data: Data = res.data(using: String.Encoding.utf8){
           do{
             let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:AnyObject]
-            print("The returend dictionary is this size: \(String(describing: dict?.count))")
             self.placeNames = (dict!["result"] as? [String])!
             self.tableViewController?.tableView.reloadData()
           } catch {
@@ -114,7 +113,7 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
   
   // MARK: - UITableViewDataSource methods
   
-  /*
+  /**
    Returns the number of rows in the given section. In this particular class,
    it will return the number of entries in the place library.
    */

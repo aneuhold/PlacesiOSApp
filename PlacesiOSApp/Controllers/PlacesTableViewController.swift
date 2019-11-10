@@ -14,12 +14,15 @@ import UIKit
  * prohibited and reserved to the author.<br>
  * <br>
  *
- * Purpose: CHANGE ME
+ * Purpose: Provides the view controller for the UITableView. This populates
+ * data from a remote JSON RPC server. If there is an error in the connection,
+ * currently it will hang on "Loading".
  *
- * SER 423 see http://quay.poly.asu.edu/Mobile/
+ * SER 423
+ * see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version October 30, 2019
+ * @version November 10, 2019
  */
 class PlacesTableViewController: UITableViewController {
   var viewController: ViewController?

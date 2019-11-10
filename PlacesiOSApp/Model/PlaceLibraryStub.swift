@@ -18,21 +18,21 @@ import Foundation
  * are below:
  *
  * - get
- * -- <code>params</code> should be a String[] type with one String which is the name of the place.
+ * -- <code>params</code> should be a [String] type with one String which is the name of the place.
  * - add
  * - getNames
- * -- <code>params</code> should be a new Object[]{} with nothing in it
+ * -- <code>params</code> should be a new [] with nothing in it
  * - resetFromJsonFile
  * - saveToJsonFile
  * - remove
- * -- <code>params</code> should be a String[] type with one String which is the name of the place.
+ * -- <code>params</code> should be a [String] type with one String which is the name of the place.
  * - getCategoryNames
  * - getNamesInCategory
  *
  * SER 423 see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version November 9, 2019
+ * @version November 10, 2019
  */
 public class PlaceLibraryStub {
   
@@ -49,7 +49,6 @@ public class PlaceLibraryStub {
   // executes in the background and calls its completion handler when the result is available.
   func asyncHttpPostJSON(url: String,  data: Data,
                          completion: @escaping (String, String?) -> Void) {
-    print("Entered the asyncHTttpPostJSON method and the url is: \(url)")
     let request = NSMutableURLRequest(url: NSURL(string: url)! as URL)
     request.httpMethod = "POST"
     request.addValue("application/json",forHTTPHeaderField: "Content-Type")

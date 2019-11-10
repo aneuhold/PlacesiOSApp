@@ -13,13 +13,13 @@ import Foundation
  * prohibited and reserved to the author.<br>
  * <br>
  *
- * Purpose: CHANGE ME
+ * Purpose: Provides the fundamental data structure for a place in this app.
  *
  * SER 423
  * see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version October 20, 2019
+ * @version November 10, 2019
  */
 class PlaceDescription {
   var name: String = "Unknown"

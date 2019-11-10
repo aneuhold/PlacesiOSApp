@@ -13,13 +13,14 @@ import UIKit
  * prohibited and reserved to the author.<br>
  * <br>
  *
- * Purpose: CHANGE ME
+ * Purpose: The primary App Delegate. Not much work is done here besides what
+ * is default.
  *
  * SER 423
  * see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version October 20, 2019
+ * @version November 10, 2019
  */
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
