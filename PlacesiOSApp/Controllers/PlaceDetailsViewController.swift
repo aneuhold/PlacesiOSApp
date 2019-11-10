@@ -23,6 +23,7 @@ import UIKit
 class PlaceDetailsViewController: UIViewController {
   var placeDescription: PlaceDescription?
   var viewController: ViewController?
+  var placeName: String?
   
   /*
    This is the index of the placeDescription within the places object at the
@@ -46,7 +47,7 @@ class PlaceDetailsViewController: UIViewController {
     // Create a reference to the main view controller. For Data!
     viewController = tabBarController as? ViewController
     
-    hydratePlaceDescriptionViews()
+    getPlaceDescription()
 
     // Do something about the keyboard hiding the content
     let notificationCenter = NotificationCenter.default
@@ -56,6 +57,27 @@ class PlaceDetailsViewController: UIViewController {
     notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard),
                                    name: UIResponder.keyboardWillChangeFrameNotification,
                                    object: nil)
+  }
+  
+  func getPlaceDescription() {
+    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: viewController!.urlString)
+    let _:Bool = placesConnect.get(name: placeName!, callback: {(res: String, err: String?) -> Void in
+      if err != nil {
+        NSLog(err!)
+      }else{
+        NSLog(res)
+        if let data: Data = res.data(using: String.Encoding.utf8){
+          do{
+            let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:AnyObject]
+            let aDict:[String:AnyObject] = (dict!["result"] as? [String:AnyObject])!
+            self.placeDescription = PlaceDescription(jsonObjDict: aDict)
+            self.hydratePlaceDescriptionViews()
+          } catch {
+            print("unable to convert to dictionary")
+          }
+        }
+      }
+    })
   }
   
   @objc func adjustForKeyboard(notification: Notification) {
@@ -95,8 +117,8 @@ class PlaceDetailsViewController: UIViewController {
     placeDescription?.latitude = (placeLatitudeTextField.text! as NSString).doubleValue
     placeDescription?.longitude = (placeLongitudeTextField.text! as NSString).doubleValue
 
-    viewController?.places.setPlaceAt(currentPlaceIndex!,
-                                      newPlaceDescription: placeDescription!)
+    //viewController?.places.setPlaceAt(currentPlaceIndex!,
+                                      //newPlaceDescription: placeDescription!)
     
     // Dismiss this view controller
     self.navigationController?.popViewController(animated: true)

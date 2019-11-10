@@ -38,6 +38,8 @@ UIPickerViewDataSource, UITextFieldDelegate {
   var currentlySelectedTextField: UITextField!
   var distance: Double = 0
   var bearing: Double = 0
+  var startPlace: PlaceDescription = PlaceDescription()
+  var endPlace: PlaceDescription = PlaceDescription()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -62,22 +64,65 @@ UIPickerViewDataSource, UITextFieldDelegate {
   }
   
   func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    return (viewController?.places.size())!
+    return (viewController?.placeNames.count)!
   }
   
   func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
     self.view.endEditing(true)
-    return viewController?.places.getPlaceAt(row).name
+    return viewController?.placeNames[row]
   }
   
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-    currentlySelectedTextField.text = viewController?.places.getPlaceAt(row).name
+    currentlySelectedTextField.text = viewController?.placeNames[row]
     pickerView.isHidden = true
-    let startPlace: PlaceDescription = (viewController?.places
-      .getPlaceWithName((startingLocationTextField?.text)!))!
-    let endPlace: PlaceDescription = (viewController?.places
-      .getPlaceWithName((endingLocationTextField?.text)!))!
-    recalculate(startPlace: startPlace, endPlace: endPlace)
+    
+    if (currentlySelectedTextField == startingLocationTextField) {
+      getStartPlaceDescription()
+    } else if (currentlySelectedTextField == endingLocationTextField) {
+      
+    }
+  }
+  
+  func getStartPlaceDescription() {
+    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: viewController!.urlString)
+    let _:Bool = placesConnect.get(name: startingLocationTextField.text!, callback: {(res: String, err: String?) -> Void in
+      if err != nil {
+        NSLog(err!)
+      } else {
+        NSLog(res)
+        if let data: Data = res.data(using: String.Encoding.utf8){
+          do{
+            let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:AnyObject]
+            let aDict:[String:AnyObject] = (dict!["result"] as? [String:AnyObject])!
+            self.startPlace = PlaceDescription(jsonObjDict: aDict)
+            self.recalculate()
+          } catch {
+            print("unable to convert to dictionary when getting Start Place Description")
+          }
+        }
+      }
+    })
+  }
+  
+  func getEndPlaceDescription() {
+    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: viewController!.urlString)
+    let _:Bool = placesConnect.get(name: endingLocationTextField.text!, callback: {(res: String, err: String?) -> Void in
+      if err != nil {
+        NSLog(err!)
+      } else {
+        NSLog(res)
+        if let data: Data = res.data(using: String.Encoding.utf8){
+          do{
+            let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:AnyObject]
+            let aDict:[String:AnyObject] = (dict!["result"] as? [String:AnyObject])!
+            self.endPlace = PlaceDescription(jsonObjDict: aDict)
+            self.recalculate()
+          } catch {
+            print("unable to convert to dictionary when getting End Place Description")
+          }
+        }
+      }
+    })
   }
   
   func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -92,8 +137,7 @@ UIPickerViewDataSource, UITextFieldDelegate {
     }
   }
   
-  private func recalculate(startPlace: PlaceDescription,
-                           endPlace: PlaceDescription) {
+  private func recalculate() {
     
     // Calculate the new distance
     let newDistance: Double = calculateDistance(lat1Dec: startPlace.latitude!,

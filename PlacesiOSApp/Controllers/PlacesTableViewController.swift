@@ -33,6 +33,9 @@ class PlacesTableViewController: UITableViewController {
     // Set the data source for the UITableView
     tableView.dataSource = viewController
     
+    // Set a reference to this tableView in the main ViewController so that changes can be made if needed.
+    viewController?.tableViewController = self
+    
     // Add an edit button, which is handled by the func table view editing forRowAt
     self.navigationItem.leftBarButtonItem = self.editButtonItem
     
@@ -51,10 +54,15 @@ class PlacesTableViewController: UITableViewController {
       
       let indexPath = self.tableView.indexPathForSelectedRow!
       
-      // Set the needed information inside the new place details view
-      placeDetailsViewController.placeDescription
-        = viewController!.places.getPlaceAt(indexPath.row)
+      // Set the temporary information inside the new place details view
+      let tempPlaceDescription: PlaceDescription = PlaceDescription()
+      tempPlaceDescription.name = "Loading Place Details..."
+      placeDetailsViewController.placeDescription = tempPlaceDescription
       placeDetailsViewController.currentPlaceIndex = indexPath.row
+      
+      // Initiate the actual call to retrieved the placeDescription
+      placeDetailsViewController.placeName =
+        viewController?.placeNames[indexPath.row]
     }
   }
   
@@ -78,7 +86,17 @@ class PlacesTableViewController: UITableViewController {
       // Create the new place
       let newPlace:PlaceDescription = PlaceDescription()
       newPlace.name = newPlaceName
-      self.viewController?.places.addPlace(newPlaceDescription: newPlace)
+      
+      let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: (self.viewController?.urlString)!)
+      let _:Bool = placesConnect.add(placeDescription: newPlace, callback: {(res: String, err: String?) -> Void in
+        if err != nil {
+          NSLog(err!)
+        }else{
+          NSLog(res)
+          self.viewController?.populatePlaceNames()
+        }
+      })
+      //self.viewController?.places.addPlace(newPlaceDescription: newPlace)
       self.tableView.reloadData()
     }))
     promptND.addTextField(configurationHandler: {(textField: UITextField!) in

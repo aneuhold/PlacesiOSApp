@@ -22,7 +22,7 @@ import Foundation
  * @version October 20, 2019
  */
 class PlaceDescription {
-  var name: String = ""
+  var name: String = "Unknown"
   var description: String? = ""
   var category: String? = ""
   var addressTitle: String? = ""
@@ -31,8 +31,8 @@ class PlaceDescription {
   var latitude: Double? = 0
   var longitude: Double? = 0
   
-  init () {
-    var name = "Unknown"
+  init() {
+    // Left blank on purpose, default values hold.
   }
   
   init (jsonStr: String) {
@@ -70,7 +70,18 @@ class PlaceDescription {
   
   func toJsonString() -> String {
     var jsonStr = "";
-    let dict:[String:Any] = [
+    do {
+      let jsonData:Data = try JSONSerialization.data(withJSONObject: toJsonObj(), options: JSONSerialization.WritingOptions.prettyPrinted)
+      // here "jsonData" is the dictionary encoded in JSON data
+      jsonStr = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
+    } catch let error as NSError {
+      print(error)
+    }
+    return jsonStr
+  }
+  
+  func toJsonObj() -> [String:Any] {
+    let jObj:[String:Any] = [
       "name": name as Any,
       "description": description as Any,
       "category": category as Any,
@@ -79,14 +90,7 @@ class PlaceDescription {
       "elevation": elevation as Any,
       "latitude": latitude as Any,
       "longitude": longitude as Any,
-    ] as [String : Any]
-    do {
-      let jsonData:Data = try JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions.prettyPrinted)
-      // here "jsonData" is the dictionary encoded in JSON data
-      jsonStr = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
-    } catch let error as NSError {
-      print(error)
-    }
-    return jsonStr
+      ] as [String : Any]
+    return jObj
   }
 }

@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 /**
  * Copyright 2019 Anton G Neuhold Jr,
@@ -13,7 +13,21 @@ import UIKit
  * prohibited and reserved to the author.<br>
  * <br>
  *
- * Purpose: Extracts place dat from the places.json file held locally. Maybe.
+ * Purpose: To retrieve data from a remote JSON RPC server that contains
+ * information on the different places stored. The different methods available
+ * are below:
+ *
+ * - get
+ * -- <code>params</code> should be a String[] type with one String which is the name of the place.
+ * - add
+ * - getNames
+ * -- <code>params</code> should be a new Object[]{} with nothing in it
+ * - resetFromJsonFile
+ * - saveToJsonFile
+ * - remove
+ * -- <code>params</code> should be a String[] type with one String which is the name of the place.
+ * - getCategoryNames
+ * - getNamesInCategory
  *
  * SER 423 see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
@@ -35,34 +49,41 @@ public class PlaceLibraryStub {
   // executes in the background and calls its completion handler when the result is available.
   func asyncHttpPostJSON(url: String,  data: Data,
                          completion: @escaping (String, String?) -> Void) {
-    
+    print("Entered the asyncHTttpPostJSON method and the url is: \(url)")
     let request = NSMutableURLRequest(url: NSURL(string: url)! as URL)
     request.httpMethod = "POST"
     request.addValue("application/json",forHTTPHeaderField: "Content-Type")
     request.addValue("application/json",forHTTPHeaderField: "Accept")
-    request.httpBody = data as Data
-    //HTTPsendRequest(request: request, callback: completion)
+    request.httpBody = data
+    httpSendRequest(request: request, callback: completion)
+  }
+  
+  // sendHttpRequest
+  func httpSendRequest(request: NSMutableURLRequest,
+                       callback: @escaping (String, String?) -> Void) {
     // task.resume() below, causes the shared session http request to be posted in the background
     // (independent of the UI Thread)
     // the use of the DispatchQueue.main.async causes the callback to occur on the main queue --
     // where the UI can be altered, and it occurs after the result of the post is received.
-    let task:URLSessionDataTask = URLSession.shared.dataTask(with: request as URLRequest, completionHandler: {
+    let task = URLSession.shared.dataTask(with: request as URLRequest) {
       (data, response, error) -> Void in
       if (error != nil) {
-        completion("", error!.localizedDescription)
+        print("There was an error in the httpSendRequest method")
+        callback("", error!.localizedDescription)
       } else {
-        DispatchQueue.main.async(execute: {completion(NSString(data: data!,
-                                                               encoding: String.Encoding.utf8.rawValue)! as String, nil)})
+        DispatchQueue.main.async(execute: {callback(NSString(data: data!,
+                                                             encoding: String.Encoding.utf8.rawValue)! as String, nil)})
       }
-    })
+    }
     task.resume()
   }
   
-  func get(name: String, callback:@escaping (String, String?) -> Void) -> Bool{
+  private func prepareAsyncHttpPostJSON(params: [Any], methodName: String,
+                                callback:@escaping (String, String?) -> Void) -> Bool {
     var ret:Bool = false
     PlaceLibraryStub.id = PlaceLibraryStub.id + 1
     do {
-      let dict:[String:Any] = ["jsonrpc":"2.0", "method":"get", "params":[name], "id":PlaceLibraryStub.id]
+      let dict:[String:Any] = ["jsonrpc":"2.0", "method":methodName, "params":params, "id":PlaceLibraryStub.id]
       let reqData:Data = try JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions(rawValue: 0))
       self.asyncHttpPostJSON(url:self.url, data:reqData, completion:callback)
       ret = true
@@ -72,18 +93,16 @@ public class PlaceLibraryStub {
     return ret
   }
   
+  func get(name: String, callback:@escaping (String, String?) -> Void) -> Bool{
+    return prepareAsyncHttpPostJSON(params: [name], methodName: "get", callback: callback)
+  }
+  
   func getNames(callback:@escaping(String, String?) -> Void) -> Bool{
-    var ret:Bool = false
-    PlaceLibraryStub.id = PlaceLibraryStub.id + 1
-    do {
-      let dict:[String:Any] = ["jsonrpc":"2.0", "method":"getNames", "params":[ ], "id":PlaceLibraryStub.id]
-      let reqData:Data = try JSONSerialization.data(withJSONObject:dict, options:JSONSerialization.WritingOptions(rawValue:0))
-      self.asyncHttpPostJSON(url:self.url, data:reqData, completion:callback)
-      ret = true
-    } catch let error as NSError {
-      print(error)
-    }
-    return ret
+    return prepareAsyncHttpPostJSON(params: [], methodName: "getNames", callback: callback)
+  }
+  
+  func add(placeDescription: PlaceDescription, callback:@escaping(String, String?) -> Void) -> Bool {
+    return prepareAsyncHttpPostJSON(params: [placeDescription.toJsonObj()], methodName: "add", callback: callback)
   }
   
   // callbacks to getNames remote method may use this method to get the array of strings from the jsonrpc result string
@@ -101,9 +120,9 @@ public class PlaceLibraryStub {
     return ret
   }
   
-  // callbacks to get remote method may use this method to get the student from the jsonrpc result string
+  // callbacks to get remote method may use this method to get the PlaceDescription from the jsonrpc result string
   func getPlaceDescriptionResult(jsonRPCResult:String) -> PlaceDescription {
-    var ret:PlaceDescription = PlaceDescription()
+    var ret:PlaceDescription = PlaceDescription() 
     if let data:NSData = jsonRPCResult.data(using:String.Encoding.utf8) as NSData?{
       do{
         let dict = try JSONSerialization.jsonObject(with: data as Data,options:.mutableContainers) as?[String:AnyObject]

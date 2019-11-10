@@ -23,28 +23,60 @@ import UIKit
  */
 class ViewController: UITabBarController, UITableViewDataSource {
   
-  var places: PlaceLibrary = PlaceLibrary()
+  // var places: PlaceLibrary = PlaceLibrary()
+  var placeNames: [String] = [String]()
+  var tableViewController: PlacesTableViewController?
+  
+  let urlString = "http://127.0.0.1:8080"
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    placeNames.append("Loading places...")
+    
+    populatePlaceNames()
+  }
+  
+  /*
+   Populates the placeNames variable using the PlaceLibraryStub class.
+   */
+  func populatePlaceNames() {
+    print("Entered populatePlaceNames method with the following urlString: \(urlString)")
+    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
+    let _:Bool = placesConnect.getNames{(res: String, err: String?) -> Void in
+      if err != nil {
+        NSLog(err!)
+      }else{
+        NSLog(res)
+        if let data: Data = res.data(using: String.Encoding.utf8){
+          do{
+            let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:AnyObject]
+            print("The returend dictionary is this size: \(String(describing: dict?.count))")
+            self.placeNames = (dict!["result"] as? [String])!
+            self.tableViewController?.tableView.reloadData()
+          } catch {
+            print("unable to convert to dictionary")
+          }
+        }
+      }
+    }
   }
   
   // MARK: - UITableViewDataSource methods
   
-  /**
+  /*
    Returns the number of rows in the given section. In this particular class,
    it will return the number of entries in the place library.
    */
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return places.size()
+    return placeNames.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     // Get and configure the cell...
     let cell = tableView.dequeueReusableCell(withIdentifier: "placeCell", for: indexPath)
-    let aPlace = places.getPlaceAt(indexPath.row)
-    cell.textLabel?.text = aPlace.name
+    cell.textLabel?.text = placeNames[indexPath.row]
     return cell
   }
   
@@ -55,8 +87,9 @@ class ViewController: UITabBarController, UITableViewDataSource {
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
     print("tableView editing row at: \(indexPath.row)")
     if editingStyle == .delete {
-      print("The delete section of the code was entered")
-      places.removePlaceAt(indexPath.row)
+      
+      // TODO: Implement a place removal here
+      // places.removePlaceAt(indexPath.row)
       
       // Let the tableView know what is being deleted.
       tableView.deleteRows(at: [indexPath], with: .fade)
