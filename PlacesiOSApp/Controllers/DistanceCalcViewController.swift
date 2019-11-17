@@ -1,5 +1,6 @@
 import UIKit
 import Foundation
+import CoreData
 
 /**
  * Copyright 2019 Anton G Neuhold Jr,
@@ -57,58 +58,46 @@ class DistanceCalcViewController: UIViewController, UIPickerViewDelegate, UIText
   }
   
   func getStartPlaceDescription() {
-    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: viewController!.urlString)
-    let _:Bool = placesConnect.get(name: startingLocationTextField.text!, callback: {(res: String, err: String?) -> Void in
-      if err != nil {
-        NSLog(err!)
-      } else {
-        NSLog(res)
-        if let data: Data = res.data(using: String.Encoding.utf8){
-          do{
-            let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:AnyObject]
-            let aDict:[String:AnyObject] = (dict!["result"] as? [String:AnyObject])!
-            self.startPlace = PlaceDescription(jsonObjDict: aDict)
-            self.recalculate()
-          } catch {
-            print("unable to convert to dictionary when getting Start Place Description")
-          }
-        }
-      }
-    })
+    startPlace = getPlaceDescription(name: startingLocationTextField.text!)
+    recalculate()
   }
   
   func getEndPlaceDescription() {
-    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: viewController!.urlString)
-    let _:Bool = placesConnect.get(name: endingLocationTextField.text!, callback: {(res: String, err: String?) -> Void in
-      if err != nil {
-        NSLog(err!)
-      } else {
-        NSLog(res)
-        if let data: Data = res.data(using: String.Encoding.utf8){
-          do{
-            let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:AnyObject]
-            let aDict:[String:AnyObject] = (dict!["result"] as? [String:AnyObject])!
-            self.endPlace = PlaceDescription(jsonObjDict: aDict)
-            self.recalculate()
-          } catch {
-            print("unable to convert to dictionary when getting End Place Description")
-          }
-        }
-      }
-    })
+    endPlace = getPlaceDescription(name: endingLocationTextField.text!)
+    recalculate()
+  }
+  
+  private func getPlaceDescription(name: String) -> PlaceDescription {
+    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Place")
+    
+    print("Fetching place with name \(name)")
+    fetchRequest.predicate = NSPredicate(format: "name == %@", name)
+    let newPlaceDescription = PlaceDescription()
+    do {
+      let placesResult = try (viewController!.managedContext?.fetch(fetchRequest))!
+      
+      // Only pulling the needed data for the placeDescription object for efficiency.
+      newPlaceDescription.name = placesResult[0].value(forKey: "name") as! String
+      newPlaceDescription.latitude = placesResult[0].value(forKey: "latitude") as? Double
+      newPlaceDescription.longitude = placesResult[0].value(forKey: "longitude") as? Double
+      
+    } catch let error as NSError {
+      print("Could not fetch data for the place description. Error is as follows: \(error)")
+    }
+    return newPlaceDescription
   }
   
   private func recalculate() {
     
     // Calculate the new distance
-    let newDistance: Double = calculateDistance(lat1Dec: startPlace.latitude!,
+    let newDistance = calculateDistance(lat1Dec: startPlace.latitude!,
                                                 lon1Dec: startPlace.longitude!,
                                                 lat2Dec: endPlace.latitude!,
                                                 lon2Dec: endPlace.longitude!)
     distanceTextView.text = "\(newDistance)mi"
     
     // Calculate the new bearing
-    let newBearing: Double = calculateBearingInDegrees(lat1Dec: startPlace.latitude!,
+    let newBearing = calculateBearingInDegrees(lat1Dec: startPlace.latitude!,
                                                        lon1Dec: startPlace.longitude!,
                                                        lat2Dec: endPlace.latitude!,
                                                        lon2Dec: endPlace.longitude!)
@@ -151,8 +140,9 @@ class DistanceCalcViewController: UIViewController, UIPickerViewDelegate, UIText
                                 - sin(lat1Rad) * cos(lat2Rad)
                                 * cos(lon2Rad - lon1Rad));
     
-    // Convert to degrees. It starts out somewhere between -180 and +180
-    result = remainder(rad2deg(result) + 360, 360)
+    // Convert to degrees and convert value. It starts out between -180 to 180
+    result = (rad2deg(result) + 360).truncatingRemainder(dividingBy: 360)
+    
     return result;
   }
   
@@ -168,11 +158,11 @@ class DistanceCalcViewController: UIViewController, UIPickerViewDelegate, UIText
   
   func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
     self.view.endEditing(true)
-    return viewController?.placeNames[row]
+    return viewController?.places[row].value(forKey: "name") as? String
   }
   
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-    currentlySelectedTextField.text = viewController?.placeNames[row]
+    currentlySelectedTextField.text = viewController?.places[row].value(forKey: "name") as? String
     pickerView.isHidden = true
     
     if (currentlySelectedTextField == startingLocationTextField) {

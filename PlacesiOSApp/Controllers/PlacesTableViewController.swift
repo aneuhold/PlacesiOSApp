@@ -1,5 +1,6 @@
 
 import UIKit
+import CoreData
 
 /**
  * Copyright 2019 Anton G Neuhold Jr,
@@ -57,15 +58,8 @@ class PlacesTableViewController: UITableViewController {
       
       let indexPath = self.tableView.indexPathForSelectedRow!
       
-      // Set the temporary information inside the new place details view
-      let tempPlaceDescription: PlaceDescription = PlaceDescription()
-      tempPlaceDescription.name = "Loading Place Details..."
-      placeDetailsViewController.placeDescription = tempPlaceDescription
-      placeDetailsViewController.currentPlaceIndex = indexPath.row
-      
-      // Initiate the actual call to retrieved the placeDescription
-      placeDetailsViewController.placeName =
-        viewController?.placeNames[indexPath.row]
+      // Set the information inside the new place details view
+      placeDetailsViewController.place = viewController?.places[indexPath.row]
     }
   }
   
@@ -82,25 +76,25 @@ class PlacesTableViewController: UITableViewController {
     // setup the OK action and provide a closure to be executed when/if OK selected
     promptND.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (action) -> Void in
       
-      // Want to provide default values for name
+      // Provide default values for name
       let newPlaceName:String = (promptND.textFields?[0].text == "") ?
         "unknown" : (promptND.textFields?[0].text)!
 
       // Create the new place
-      let newPlace:PlaceDescription = PlaceDescription()
-      newPlace.name = newPlaceName
+      let newPlace = NSManagedObject(entity: (self.viewController?.entity)!, insertInto: self.viewController?.managedContext)
+      newPlace.setValue(newPlaceName, forKey: "name")
+      self.viewController?.places.append(newPlace)
       
-      let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: (self.viewController?.urlString)!)
-      let _:Bool = placesConnect.add(placeDescription: newPlace, callback: {(res: String, err: String?) -> Void in
-        if err != nil {
-          NSLog(err!)
-        }else{
-          NSLog(res)
-          self.viewController?.populatePlaceNames()
-        }
-      })
-      //self.viewController?.places.addPlace(newPlaceDescription: newPlace)
+      // Try to save after the new place is created
+      do {
+        try self.viewController!.managedContext?.save()
+      } catch let error as NSError {
+        print("Could not save the new place, error is as follows: \(error)")
+      }
+      
+      // Reload the table view data
       self.tableView.reloadData()
+      
     }))
     promptND.addTextField(configurationHandler: {(textField: UITextField!) in
       textField.placeholder = "Place Name"

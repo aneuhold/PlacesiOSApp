@@ -1,4 +1,5 @@
 import UIKit
+import CoreData
 
 /**
  * Copyright 2019 Anton G Neuhold Jr,
@@ -23,15 +24,8 @@ import UIKit
  * @version November 10, 2019
  */
 class PlaceDetailsViewController: UIViewController {
-  var placeDescription: PlaceDescription?
+  var place: NSManagedObject?
   var viewController: ViewController?
-  var placeName: String?
-  
-  /*
-   This is the index of the placeDescription within the places object at the
-   top level view controller.
-   */
-  var currentPlaceIndex: Int?
   
   @IBOutlet weak var placeNameTextField: UITextField!
   @IBOutlet weak var placeDescriptionTextField: UITextField!
@@ -49,7 +43,7 @@ class PlaceDetailsViewController: UIViewController {
     // Create a reference to the main view controller. For Data!
     viewController = tabBarController as? ViewController
     
-    getPlaceDescription()
+    hydratePlaceDescriptionViews()
 
     // Do something about the keyboard hiding the content
     let notificationCenter = NotificationCenter.default
@@ -59,27 +53,6 @@ class PlaceDetailsViewController: UIViewController {
     notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard),
                                    name: UIResponder.keyboardWillChangeFrameNotification,
                                    object: nil)
-  }
-  
-  func getPlaceDescription() {
-    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: viewController!.urlString)
-    let _:Bool = placesConnect.get(name: placeName!, callback: {(res: String, err: String?) -> Void in
-      if err != nil {
-        NSLog(err!)
-      }else{
-        NSLog(res)
-        if let data: Data = res.data(using: String.Encoding.utf8){
-          do{
-            let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:AnyObject]
-            let aDict:[String:AnyObject] = (dict!["result"] as? [String:AnyObject])!
-            self.placeDescription = PlaceDescription(jsonObjDict: aDict)
-            self.hydratePlaceDescriptionViews()
-          } catch {
-            print("unable to convert to dictionary")
-          }
-        }
-      }
-    })
   }
   
   @objc func adjustForKeyboard(notification: Notification) {
@@ -98,29 +71,33 @@ class PlaceDetailsViewController: UIViewController {
   }
   
   private func hydratePlaceDescriptionViews() {
-    placeNameTextField.text = placeDescription?.name
-    placeDescriptionTextField.text = placeDescription?.description
-    placeCategoryTextField.text = placeDescription?.category
-    placeAddressTitleTextField.text = placeDescription?.addressTitle
-    placeAddressStreetTextField.text = placeDescription?.addressStreet
-    placeElevationTextField.text = String(format: "%f",(placeDescription?.elevation)!)
-    placeLatitudeTextField.text = String(format: "%f",(placeDescription?.latitude)!)
-    placeLongitudeTextField.text = String(format: "%f",(placeDescription?.longitude)!)
+    placeNameTextField.text = place!.value(forKey: "name") as? String
+    placeDescriptionTextField.text = place!.value(forKey: "placeDescription") as? String
+    placeCategoryTextField.text = place!.value(forKey: "category") as? String
+    placeAddressTitleTextField.text = place!.value(forKey: "addressTitle") as? String
+    placeAddressStreetTextField.text = place!.value(forKey: "addressStreet") as? String
+    placeElevationTextField.text = String(format: "%f",(place!.value(forKey: "elevation") as? Double)!)
+    placeLatitudeTextField.text = String(format: "%f",(place!.value(forKey: "latitude") as? Double)!)
+    placeLongitudeTextField.text = String(format: "%f",(place!.value(forKey: "longitude") as? Double)!)
   }
   
   @IBAction func onDonePress(_ sender: UIButton) {
     
     // Set all of the PlaceDescription values
-    placeDescription?.description = placeDescriptionTextField.text
-    placeDescription?.category = placeCategoryTextField.text
-    placeDescription?.addressTitle = placeAddressTitleTextField.text
-    placeDescription?.addressStreet = placeAddressStreetTextField.text
-    placeDescription?.elevation = (placeElevationTextField.text! as NSString).doubleValue
-    placeDescription?.latitude = (placeLatitudeTextField.text! as NSString).doubleValue
-    placeDescription?.longitude = (placeLongitudeTextField.text! as NSString).doubleValue
+    place?.setValue(placeDescriptionTextField.text, forKey: "placeDescription")
+    place?.setValue(placeCategoryTextField.text, forKey: "category")
+    place?.setValue(placeAddressTitleTextField.text, forKey: "addressTitle")
+    place?.setValue(placeAddressStreetTextField.text, forKey: "addressStreet")
+    place?.setValue((placeElevationTextField.text! as NSString).doubleValue, forKey: "elevation")
+    place?.setValue((placeLatitudeTextField.text! as NSString).doubleValue, forKey: "latitude")
+    place?.setValue((placeLongitudeTextField.text! as NSString).doubleValue, forKey: "longitude")
 
-    // Modify the place on the server by deleting it first, then adding it back
-    viewController?.modifyPlace(placeDescription: self.placeDescription!)
+    // Save the information to Core Data
+    do {
+      try viewController?.managedContext!.save()
+    } catch let error as NSError {
+      print("Could not save. \(error), \(error.userInfo)")
+    }
     
     // Dismiss this view controller
     self.navigationController?.popViewController(animated: true)

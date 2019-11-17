@@ -1,4 +1,5 @@
 import UIKit
+import CoreData
 
 /**
  * Copyright 2019 Anton G Neuhold Jr,
@@ -24,81 +25,34 @@ import UIKit
  */
 class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDataSource {
   
-  // var places: PlaceLibrary = PlaceLibrary()
-  var placeNames: [String] = [String]()
+  var places: [NSManagedObject] = []
   var tableViewController: PlacesTableViewController?
-  
-  var urlString = "http://127.0.0.1:8080"
+  var appDelegate: AppDelegate?
+  var managedContext: NSManagedObjectContext?
+  var entity: NSEntityDescription?
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    placeNames.append("Loading places...")
-    urlString = generateURL()
-    populatePlaceNames()
+    // Setup variables for Core Data
+    appDelegate = UIApplication.shared.delegate as? AppDelegate
+    managedContext = appDelegate?.persistentContainer.viewContext
+    entity = NSEntityDescription.entity(forEntityName: "Place", in: managedContext!)
+    
+    populatePlacesArray()
+    //self.tableViewController?.tableView.reloadData()
+    
+    // Intialize Core Data
+    initializeCoreData()
   }
   
-  func generateURL () -> String {
-    var serverhost:String = "localhost"
-    var jsonrpcport:String = "8080"
-    var serverprotocol:String = "http"
-    // access and log all of the app settings from the settings bundle resource
-    if let path = Bundle.main.path(forResource: "ServerInfo", ofType: "plist"){
-      // defaults
-      if let dict = NSDictionary(contentsOfFile: path) as? [String:AnyObject] {
-        serverhost = (dict["server_host"] as? String)!
-        jsonrpcport = (dict["jsonrpc_port"] as? String)!
-        serverprotocol = (dict["server_protocol"] as? String)!
-      }
+  func populatePlacesArray() {
+    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Place")
+    do {
+      places = try (managedContext?.fetch(fetchRequest))!
+    } catch let error as NSError {
+      print("Could not fetch for the places array. Error is as follows: \(error)")
     }
-    print("setURL returning: \(serverprotocol)://\(serverhost):\(jsonrpcport)")
-    return "\(serverprotocol)://\(serverhost):\(jsonrpcport)"
-  }
-  
-  /**
-   Populates the placeNames variable using the PlaceLibraryStub class.
-   */
-  func populatePlaceNames() {
-    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
-    let _:Bool = placesConnect.getNames{(res: String, err: String?) -> Void in
-      if err != nil {
-        NSLog(err!)
-      }else{
-        NSLog(res)
-        if let data: Data = res.data(using: String.Encoding.utf8){
-          do{
-            let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:AnyObject]
-            self.placeNames = (dict!["result"] as? [String])!
-            self.tableViewController?.tableView.reloadData()
-          } catch {
-            print("unable to convert to dictionary")
-          }
-        }
-      }
-    }
-  }
-  
-  func modifyPlace(placeDescription: PlaceDescription) {
-    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
-    let _:Bool = placesConnect.remove(name: placeDescription.name, callback: {(res: String, err: String?) -> Void in
-      if err != nil {
-        NSLog(err!)
-      }else{
-        NSLog(res)
-        self.addAfterRemovingPlace(placeDescription: placeDescription)
-      }
-    })
-  }
-  
-  private func addAfterRemovingPlace(placeDescription: PlaceDescription) {
-    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
-    let _:Bool = placesConnect.add(placeDescription: placeDescription, callback: {(res: String, err: String?) -> Void in
-      if err != nil {
-        NSLog(err!)
-      }else{
-        NSLog(res)
-      }
-    })
   }
   
   // MARK: - UIPickerViewDataSource methods
@@ -108,7 +62,7 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
   }
   
   func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    return placeNames.count
+    return places.count
   }
   
   // MARK: - UITableViewDataSource methods
@@ -118,14 +72,15 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
    it will return the number of entries in the place library.
    */
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return placeNames.count
+    return places.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     // Get and configure the cell...
     let cell = tableView.dequeueReusableCell(withIdentifier: "placeCell", for: indexPath)
-    cell.textLabel?.text = placeNames[indexPath.row]
+    let place = places[indexPath.row]
+    cell.textLabel?.text = place.value(forKey: "name") as? String
     return cell
   }
   
@@ -137,21 +92,19 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
     print("tableView editing row at: \(indexPath.row)")
     if editingStyle == .delete {
       
-      // Get a reference to the place name
-      let placeName: String = placeNames[indexPath.row]
+      print("The row is about to be deleted")
+      managedContext?.delete(places[indexPath.row])
       
-      // Remove the item locally
-      placeNames.remove(at: indexPath.row)
+      print("The managed context deleted the row evidently")
+      do {
+        try managedContext?.save()
+      } catch let error as NSError {
+        print("Could not remove the place, error is as follows: \(error)")
+      }
       
-      // Remove the item on the server
-      let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
-      let _:Bool = placesConnect.remove(name: placeName, callback: {(res: String, err: String?) -> Void in
-        if err != nil {
-          NSLog(err!)
-        }else{
-          NSLog(res)
-        }
-      })
+      print("Evidently it saved")
+      
+      places.remove(at: indexPath.row)
       
       // Let the tableView know what is being deleted.
       tableView.deleteRows(at: [indexPath], with: .fade)
@@ -159,5 +112,44 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
     }
   }
   
+  func initializeCoreData() {
+    
+    if (places.count == 0) {
+      
+      /*
+       * Use the PlaceLibrary class and json file ONLY TO LOAD IN THE INTIALIZER
+       * DATA. This is not used as the backing of the data for the app in any way.
+       */
+      let placeLibrary = PlaceLibrary()
+      var i = 0
+      while (i < placeLibrary.size()) {
+        let currentPlace = placeLibrary.getPlaceAt(i)
+        let newPlace = NSManagedObject(entity: entity!, insertInto: managedContext)
+        
+        // Set all of the Place values
+        newPlace.setValue(currentPlace.name, forKey: "name")
+        newPlace.setValue(currentPlace.description, forKey: "placeDescription")
+        newPlace.setValue(currentPlace.category, forKey: "category")
+        newPlace.setValue(currentPlace.addressTitle, forKey: "addressTitle")
+        newPlace.setValue(currentPlace.addressStreet, forKey: "addressStreet")
+        newPlace.setValue(currentPlace.elevation, forKey: "elevation")
+        newPlace.setValue(currentPlace.latitude, forKey: "latitude")
+        newPlace.setValue(currentPlace.longitude, forKey: "longitude")
+        
+        i = i + 1
+      }
+      
+      // Try to save after all of the new places are created.
+      do {
+        try managedContext?.save()
+      } catch let error as NSError {
+        print("Could not save the new place while initializing, error is as follows: \(error)")
+      }
+      
+      // Re-populate the places array
+      populatePlacesArray()
+      self.tableViewController?.tableView.reloadData()
+    }
+  }
 }
 
