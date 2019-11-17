@@ -16,14 +16,13 @@ import CoreData
  * <br>
  *
  * Purpose: Provides the view controller for the UITableView. This populates
- * data from a remote JSON RPC server. If there is an error in the connection,
- * currently it will hang on "Loading".
+ * data from Core Data.
  *
  * SER 423
  * see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version November 10, 2019
+ * @version November 17, 2019
  */
 class PlacesTableViewController: UITableViewController {
   var viewController: ViewController?

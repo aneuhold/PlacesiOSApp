@@ -21,7 +21,7 @@ import CoreData
  * see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version November 16, 2019
+ * @version November 17, 2019
  */
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

@@ -23,7 +23,7 @@ import CoreData
  * see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version November 10, 2019
+ * @version November 17, 2019
  */
 class DistanceCalcViewController: UIViewController, UIPickerViewDelegate, UITextFieldDelegate {
   
