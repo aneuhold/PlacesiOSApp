@@ -152,7 +152,8 @@ class DistanceCalcViewController: UIViewController, UIPickerViewDelegate, UIText
                                 * cos(lon2Rad - lon1Rad));
     
     // Convert to degrees. It starts out somewhere between -180 and +180
-    result = remainder(rad2deg(result) + 360, 360)
+    result = (rad2deg(result) + 360).truncatingRemainder(dividingBy: 360)
+    
     return result;
   }
   
