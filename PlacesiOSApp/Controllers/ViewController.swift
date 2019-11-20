@@ -91,19 +91,12 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
     print("tableView editing row at: \(indexPath.row)")
     if editingStyle == .delete {
-      
-      print("The row is about to be deleted")
       managedContext?.delete(places[indexPath.row])
-      
-      print("The managed context deleted the row evidently")
       do {
         try managedContext?.save()
       } catch let error as NSError {
         print("Could not remove the place, error is as follows: \(error)")
       }
-      
-      print("Evidently it saved")
-      
       places.remove(at: indexPath.row)
       
       // Let the tableView know what is being deleted.
