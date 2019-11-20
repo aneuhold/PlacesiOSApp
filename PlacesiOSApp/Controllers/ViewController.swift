@@ -46,6 +46,23 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
     initializeCoreData()
   }
   
+  func generateURL () -> String {
+    var serverhost:String = "localhost"
+    var jsonrpcport:String = "8080"
+    var serverprotocol:String = "http"
+    // access and log all of the app settings from the settings bundle resource
+    if let path = Bundle.main.path(forResource: "ServerInfo", ofType: "plist"){
+      // defaults
+      if let dict = NSDictionary(contentsOfFile: path) as? [String:AnyObject] {
+        serverhost = (dict["server_host"] as? String)!
+        jsonrpcport = (dict["jsonrpc_port"] as? String)!
+        serverprotocol = (dict["server_protocol"] as? String)!
+      }
+    }
+    print("setURL returning: \(serverprotocol)://\(serverhost):\(jsonrpcport)")
+    return "\(serverprotocol)://\(serverhost):\(jsonrpcport)"
+  }
+  
   func populatePlacesArray() {
     let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Place")
     do {
