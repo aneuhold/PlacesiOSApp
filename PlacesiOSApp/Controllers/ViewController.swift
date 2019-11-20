@@ -30,6 +30,12 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
   var appDelegate: AppDelegate?
   var managedContext: NSManagedObjectContext?
   var entity: NSEntityDescription?
+  var urlString = "http://127.0.0.1:8080"
+  
+  /**
+   * Used as the source of truth for data in the JSON RPC server in a way.
+   */
+  var placeNames: [String] = [String]()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -39,11 +45,11 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
     managedContext = appDelegate?.persistentContainer.viewContext
     entity = NSEntityDescription.entity(forEntityName: "Place", in: managedContext!)
     
+    // Get the most recent places from the local Core Data. This occurs first because it should be a lot faster than the JSON RPC network check.
     populatePlacesArray()
-    //self.tableViewController?.tableView.reloadData()
     
-    // Intialize Core Data
-    initializeCoreData()
+    // Get the data from the JSON RPC Server
+    updatePlacesArray()
   }
   
   func generateURL () -> String {
@@ -61,6 +67,29 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
     }
     print("setURL returning: \(serverprotocol)://\(serverhost):\(jsonrpcport)")
     return "\(serverprotocol)://\(serverhost):\(jsonrpcport)"
+  }
+  
+  /**
+   Populates the placeNames variable using the PlaceLibraryStub class.
+   */
+  func populatePlaceNames() {
+    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
+    let _:Bool = placesConnect.getNames{(res: String, err: String?) -> Void in
+      if err != nil {
+        NSLog(err!)
+      }else{
+        NSLog(res)
+        if let data: Data = res.data(using: String.Encoding.utf8){
+          do{
+            let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:AnyObject]
+            self.placeNames = (dict!["result"] as? [String])!
+            self.tableViewController?.tableView.reloadData()
+          } catch {
+            print("unable to convert to dictionary")
+          }
+        }
+      }
+    }
   }
   
   func populatePlacesArray() {
@@ -109,17 +138,13 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
     print("tableView editing row at: \(indexPath.row)")
     if editingStyle == .delete {
       
-      print("The row is about to be deleted")
       managedContext?.delete(places[indexPath.row])
       
-      print("The managed context deleted the row evidently")
       do {
         try managedContext?.save()
       } catch let error as NSError {
         print("Could not remove the place, error is as follows: \(error)")
       }
-      
-      print("Evidently it saved")
       
       places.remove(at: indexPath.row)
       
@@ -129,7 +154,20 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
     }
   }
   
-  func initializeCoreData() {
+  /**
+   * A heavy function that goes through each place name and retrieves information
+   * to fill out the placesArray CoreData locally. This should only be ran on
+   * launch.
+   */
+  func updatePlacesArray() {
+    
+    // Get the names from the JSON RPC Server
+    populatePlaceNames()
+    
+    // For each name, match with the local Core Data if it exists, and update the rows
+    for (placeName) in placeNames {
+      
+    }
     
     if (places.count == 0) {
       

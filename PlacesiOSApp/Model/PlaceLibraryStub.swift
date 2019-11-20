@@ -18,14 +18,14 @@ import Foundation
  * are below:
  *
  * - get
- * -- <code>params</code> should be a [String] type with one String which is the name of the place.
+ * -- params should be a [String] type with one String which is the name of the place.
  * - add
  * - getNames
- * -- <code>params</code> should be a new [] with nothing in it
+ * -- params should be a new [] with nothing in it
  * - resetFromJsonFile
  * - saveToJsonFile
  * - remove
- * -- <code>params</code> should be a [String] type with one String which is the name of the place.
+ * -- params should be a [String] type with one String which is the name of the place.
  * - getCategoryNames
  * - getNamesInCategory
  *
