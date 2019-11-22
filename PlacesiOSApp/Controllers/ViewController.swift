@@ -25,79 +25,17 @@ import CoreData
  */
 class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDataSource {
   
-  var places: [NSManagedObject] = []
-  var tableViewController: PlacesTableViewController?
-  var appDelegate: AppDelegate?
-  var managedContext: NSManagedObjectContext?
-  var entity: NSEntityDescription?
-  var urlString = "http://127.0.0.1:8080"
-  
   /**
-   * Used as the source of truth for data in the JSON RPC server in a way.
+   The reference to tableViewController is set within the PlacesTableViewController
+   class.
    */
-  var placeNames: [String] = [String]()
+  var tableViewController: PlacesTableViewController?
+  var placeCoreData: PlaceCoreData?
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    // Setup variables for Core Data
-    appDelegate = UIApplication.shared.delegate as? AppDelegate
-    managedContext = appDelegate?.persistentContainer.viewContext
-    entity = NSEntityDescription.entity(forEntityName: "Place", in: managedContext!)
-    
-    // Get the most recent places from the local Core Data. This occurs first because it should be a lot faster than the JSON RPC network check.
-    populatePlacesArray()
-    
-    // Get the data from the JSON RPC Server
-    updatePlacesArray()
-  }
-  
-  func generateURL () -> String {
-    var serverhost:String = "localhost"
-    var jsonrpcport:String = "8080"
-    var serverprotocol:String = "http"
-    // access and log all of the app settings from the settings bundle resource
-    if let path = Bundle.main.path(forResource: "ServerInfo", ofType: "plist"){
-      // defaults
-      if let dict = NSDictionary(contentsOfFile: path) as? [String:AnyObject] {
-        serverhost = (dict["server_host"] as? String)!
-        jsonrpcport = (dict["jsonrpc_port"] as? String)!
-        serverprotocol = (dict["server_protocol"] as? String)!
-      }
-    }
-    print("setURL returning: \(serverprotocol)://\(serverhost):\(jsonrpcport)")
-    return "\(serverprotocol)://\(serverhost):\(jsonrpcport)"
-  }
-  
-  /**
-   Populates the placeNames variable using the PlaceLibraryStub class.
-   */
-  func populatePlaceNames() {
-    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
-    let _:Bool = placesConnect.getNames{(res: String, err: String?) -> Void in
-      if err != nil {
-        NSLog(err!)
-      }else{
-        NSLog(res)
-        if let data: Data = res.data(using: String.Encoding.utf8){
-          do{
-            let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:AnyObject]
-            self.placeNames = (dict!["result"] as? [String])!
-            self.tableViewController?.tableView.reloadData()
-          } catch {
-            print("unable to convert to dictionary")
-          }
-        }
-      }
-    }
-  }
-  
-  func populatePlacesArray() {
-    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Place")
-    do {
-      places = try (managedContext?.fetch(fetchRequest))!
-    } catch let error as NSError {
-      print("Could not fetch for the places array. Error is as follows: \(error)")
+    placeCoreData = PlaceCoreData(){
+      self.tableViewController?.tableView.reloadData()
     }
   }
   
@@ -108,7 +46,7 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
   }
   
   func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    return places.count
+    return (placeCoreData?.size())!
   }
   
   // MARK: - UITableViewDataSource methods
@@ -118,15 +56,14 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
    it will return the number of entries in the place library.
    */
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return places.count
+    return (placeCoreData?.size())!
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     // Get and configure the cell...
     let cell = tableView.dequeueReusableCell(withIdentifier: "placeCell", for: indexPath)
-    let place = places[indexPath.row]
-    cell.textLabel?.text = place.value(forKey: "name") as? String
+    cell.textLabel?.text = placeCoreData?.getNameOfPlaceAt(indexPath.row)
     return cell
   }
   
@@ -137,73 +74,11 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
     print("tableView editing row at: \(indexPath.row)")
     if editingStyle == .delete {
-      
-      managedContext?.delete(places[indexPath.row])
-      
-      do {
-        try managedContext?.save()
-      } catch let error as NSError {
-        print("Could not remove the place, error is as follows: \(error)")
-      }
-      
-      places.remove(at: indexPath.row)
+      placeCoreData?.deletePlaceAt(indexPath.row)
       
       // Let the tableView know what is being deleted.
       tableView.deleteRows(at: [indexPath], with: .fade)
       // don't need to reload data, using delete to make update
-    }
-  }
-  
-  /**
-   * A heavy function that goes through each place name and retrieves information
-   * to fill out the placesArray CoreData locally. This should only be ran on
-   * launch.
-   */
-  func updatePlacesArray() {
-    
-    // Get the names from the JSON RPC Server
-    populatePlaceNames()
-    
-    // For each name, match with the local Core Data if it exists, and update the rows
-    for (placeName) in placeNames {
-      
-    }
-    
-    if (places.count == 0) {
-      
-      /*
-       * Use the PlaceLibrary class and json file ONLY TO LOAD IN THE INTIALIZER
-       * DATA. This is not used as the backing of the data for the app in any way.
-       */
-      let placeLibrary = PlaceLibrary()
-      var i = 0
-      while (i < placeLibrary.size()) {
-        let currentPlace = placeLibrary.getPlaceAt(i)
-        let newPlace = NSManagedObject(entity: entity!, insertInto: managedContext)
-        
-        // Set all of the Place values
-        newPlace.setValue(currentPlace.name, forKey: "name")
-        newPlace.setValue(currentPlace.description, forKey: "placeDescription")
-        newPlace.setValue(currentPlace.category, forKey: "category")
-        newPlace.setValue(currentPlace.addressTitle, forKey: "addressTitle")
-        newPlace.setValue(currentPlace.addressStreet, forKey: "addressStreet")
-        newPlace.setValue(currentPlace.elevation, forKey: "elevation")
-        newPlace.setValue(currentPlace.latitude, forKey: "latitude")
-        newPlace.setValue(currentPlace.longitude, forKey: "longitude")
-        
-        i = i + 1
-      }
-      
-      // Try to save after all of the new places are created.
-      do {
-        try managedContext?.save()
-      } catch let error as NSError {
-        print("Could not save the new place while initializing, error is as follows: \(error)")
-      }
-      
-      // Re-populate the places array
-      populatePlacesArray()
-      self.tableViewController?.tableView.reloadData()
     }
   }
 }

@@ -26,6 +26,9 @@ import CoreData
 class PlaceDetailsViewController: UIViewController {
   var place: NSManagedObject?
   var viewController: ViewController?
+  var placeCoreData: PlaceCoreData?
+  var placeDescription: PlaceDescription?
+  var placeIndex: Int?
   
   @IBOutlet weak var placeNameTextField: UITextField!
   @IBOutlet weak var placeDescriptionTextField: UITextField!
@@ -42,6 +45,7 @@ class PlaceDetailsViewController: UIViewController {
     
     // Create a reference to the main view controller. For Data!
     viewController = tabBarController as? ViewController
+    placeCoreData = viewController?.placeCoreData!
     
     hydratePlaceDescriptionViews()
 
@@ -71,33 +75,29 @@ class PlaceDetailsViewController: UIViewController {
   }
   
   private func hydratePlaceDescriptionViews() {
-    placeNameTextField.text = place!.value(forKey: "name") as? String
-    placeDescriptionTextField.text = place!.value(forKey: "placeDescription") as? String
-    placeCategoryTextField.text = place!.value(forKey: "category") as? String
-    placeAddressTitleTextField.text = place!.value(forKey: "addressTitle") as? String
-    placeAddressStreetTextField.text = place!.value(forKey: "addressStreet") as? String
-    placeElevationTextField.text = String(format: "%f",(place!.value(forKey: "elevation") as? Double)!)
-    placeLatitudeTextField.text = String(format: "%f",(place!.value(forKey: "latitude") as? Double)!)
-    placeLongitudeTextField.text = String(format: "%f",(place!.value(forKey: "longitude") as? Double)!)
+    placeNameTextField.text = placeDescription?.name
+    placeDescriptionTextField.text = placeDescription?.description
+    placeCategoryTextField.text = placeDescription?.category
+    placeAddressTitleTextField.text = placeDescription?.addressTitle
+    placeAddressStreetTextField.text = placeDescription?.addressStreet
+    placeElevationTextField.text = String(format: "%f",(placeDescription?.elevation)!)
+    placeLatitudeTextField.text = String(format: "%f",(placeDescription?.latitude)!)
+    placeLongitudeTextField.text = String(format: "%f",(placeDescription?.longitude)!)
   }
   
   @IBAction func onDonePress(_ sender: UIButton) {
     
     // Set all of the PlaceDescription values
-    place?.setValue(placeDescriptionTextField.text, forKey: "placeDescription")
-    place?.setValue(placeCategoryTextField.text, forKey: "category")
-    place?.setValue(placeAddressTitleTextField.text, forKey: "addressTitle")
-    place?.setValue(placeAddressStreetTextField.text, forKey: "addressStreet")
-    place?.setValue((placeElevationTextField.text! as NSString).doubleValue, forKey: "elevation")
-    place?.setValue((placeLatitudeTextField.text! as NSString).doubleValue, forKey: "latitude")
-    place?.setValue((placeLongitudeTextField.text! as NSString).doubleValue, forKey: "longitude")
+    placeDescription?.description = placeDescriptionTextField.text
+    placeDescription?.category = placeCategoryTextField.text
+    placeDescription?.addressTitle = placeAddressTitleTextField.text
+    placeDescription?.addressStreet = placeAddressStreetTextField.text
+    placeDescription?.elevation = (placeElevationTextField.text! as NSString).doubleValue
+    placeDescription?.latitude = (placeLatitudeTextField.text! as NSString).doubleValue
+    placeDescription?.longitude = (placeLongitudeTextField.text! as NSString).doubleValue
 
     // Save the information to Core Data
-    do {
-      try viewController?.managedContext!.save()
-    } catch let error as NSError {
-      print("Could not save. \(error), \(error.userInfo)")
-    }
+    placeCoreData!.setPlaceAt(placeIndex!, newPlaceDescription: placeDescription!)
     
     // Dismiss this view controller
     self.navigationController?.popViewController(animated: true)

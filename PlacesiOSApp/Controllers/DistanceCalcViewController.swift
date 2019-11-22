@@ -28,6 +28,7 @@ import CoreData
 class DistanceCalcViewController: UIViewController, UIPickerViewDelegate, UITextFieldDelegate {
   
   var viewController: ViewController?
+  var placeCoreData: PlaceCoreData?
   @IBOutlet weak var pickerView: UIPickerView!
   @IBOutlet weak var startingLocationTextField: UITextField!
   @IBOutlet weak var endingLocationTextField: UITextField!
@@ -43,8 +44,9 @@ class DistanceCalcViewController: UIViewController, UIPickerViewDelegate, UIText
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    // Get a reference to the top level view controller
+    // Get a reference to the top level view controller and Core Data
     viewController = tabBarController as? ViewController
+    placeCoreData = viewController?.placeCoreData!
     
     // Set delegates
     startingLocationTextField.delegate = self
@@ -58,33 +60,13 @@ class DistanceCalcViewController: UIViewController, UIPickerViewDelegate, UIText
   }
   
   func getStartPlaceDescription() {
-    startPlace = getPlaceDescription(name: startingLocationTextField.text!)
+    startPlace = (placeCoreData?.getPlaceDescriptionWithName(startingLocationTextField.text!))!
     recalculate()
   }
   
   func getEndPlaceDescription() {
-    endPlace = getPlaceDescription(name: endingLocationTextField.text!)
+    endPlace = (placeCoreData?.getPlaceDescriptionWithName(endingLocationTextField.text!))!
     recalculate()
-  }
-  
-  private func getPlaceDescription(name: String) -> PlaceDescription {
-    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Place")
-    
-    print("Fetching place with name \(name)")
-    fetchRequest.predicate = NSPredicate(format: "name == %@", name)
-    let newPlaceDescription = PlaceDescription()
-    do {
-      let placesResult = try (viewController!.managedContext?.fetch(fetchRequest))!
-      
-      // Only pulling the needed data for the placeDescription object for efficiency.
-      newPlaceDescription.name = placesResult[0].value(forKey: "name") as! String
-      newPlaceDescription.latitude = placesResult[0].value(forKey: "latitude") as? Double
-      newPlaceDescription.longitude = placesResult[0].value(forKey: "longitude") as? Double
-      
-    } catch let error as NSError {
-      print("Could not fetch data for the place description. Error is as follows: \(error)")
-    }
-    return newPlaceDescription
   }
   
   private func recalculate() {
@@ -158,11 +140,11 @@ class DistanceCalcViewController: UIViewController, UIPickerViewDelegate, UIText
   
   func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
     self.view.endEditing(true)
-    return viewController?.places[row].value(forKey: "name") as? String
+    return placeCoreData?.getNameOfPlaceAt(row)
   }
   
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-    currentlySelectedTextField.text = viewController?.places[row].value(forKey: "name") as? String
+    currentlySelectedTextField.text = placeCoreData?.getNameOfPlaceAt(row)
     pickerView.isHidden = true
     
     if (currentlySelectedTextField == startingLocationTextField) {

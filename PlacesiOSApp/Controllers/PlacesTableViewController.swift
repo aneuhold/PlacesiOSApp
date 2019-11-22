@@ -38,6 +38,7 @@ class PlacesTableViewController: UITableViewController {
     
     // Set a reference to this tableView in the main ViewController so that changes can be made if needed.
     viewController?.tableViewController = self
+    viewController?.placeCoreData?.tableView = self.tableView
     
     // Add an edit button, which is handled by the func table view editing forRowAt
     self.navigationItem.leftBarButtonItem = self.editButtonItem
@@ -58,7 +59,9 @@ class PlacesTableViewController: UITableViewController {
       let indexPath = self.tableView.indexPathForSelectedRow!
       
       // Set the information inside the new place details view
-      placeDetailsViewController.place = viewController?.places[indexPath.row]
+      let placeName = viewController?.placeCoreData?.getNameOfPlaceAt(indexPath.row)
+      placeDetailsViewController.placeDescription = viewController?.placeCoreData?.getPlaceDescriptionWithName(placeName!)
+      placeDetailsViewController.placeIndex = indexPath.row
     }
   }
   
@@ -76,23 +79,13 @@ class PlacesTableViewController: UITableViewController {
     promptND.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (action) -> Void in
       
       // Provide default values for name
-      let newPlaceName:String = (promptND.textFields?[0].text == "") ?
+      let newPlaceName: String = (promptND.textFields?[0].text == "") ?
         "unknown" : (promptND.textFields?[0].text)!
 
-      // Create the new place
-      let newPlace = NSManagedObject(entity: (self.viewController?.entity)!, insertInto: self.viewController?.managedContext)
-      newPlace.setValue(newPlaceName, forKey: "name")
-      self.viewController?.places.append(newPlace)
-      
-      // Try to save after the new place is created
-      do {
-        try self.viewController!.managedContext?.save()
-      } catch let error as NSError {
-        print("Could not save the new place, error is as follows: \(error)")
-      }
-      
-      // Reload the table view data
-      self.tableView.reloadData()
+      // Create the new place. This automatically refreshes the tableView data
+      let newPlaceDescription: PlaceDescription = PlaceDescription()
+      newPlaceDescription.name = newPlaceName
+      self.viewController?.placeCoreData?.addPlace(newPlaceDescription: newPlaceDescription)
       
     }))
     promptND.addTextField(configurationHandler: {(textField: UITextField!) in

@@ -14,13 +14,16 @@
 		0D387970235D2C7900AD7BDA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D38796E235D2C7900AD7BDA /* LaunchScreen.storyboard */; };
 		0D38797B235D2C7900AD7BDA /* PlacesiOSAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D38797A235D2C7900AD7BDA /* PlacesiOSAppTests.swift */; };
 		0D5DB28623776BE300FA256C /* PlaceLibraryStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5DB28523776BE300FA256C /* PlaceLibraryStub.swift */; };
-		0D6D11E0236A32FB00A2714C /* PlaceLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6D11DA236A04C600A2714C /* PlaceLibrary.swift */; };
+		0D5F0E7023877572003D09A1 /* SyncViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5F0E6F23877572003D09A1 /* SyncViewController.swift */; };
+		0D6D11E0236A32FB00A2714C /* PlaceCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6D11DA236A04C600A2714C /* PlaceCoreData.swift */; };
 		0D6D11E1236A330100A2714C /* PlaceDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D387985235DE43700AD7BDA /* PlaceDescription.swift */; };
 		0D6D11E4236B6DE400A2714C /* PlacesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6D11E3236B6DE400A2714C /* PlacesTableViewController.swift */; };
 		0D6D11E6236BAAEC00A2714C /* places.json in Resources */ = {isa = PBXBuildFile; fileRef = 0D6D11E5236BAAEC00A2714C /* places.json */; };
 		0D6D11E8236CD10500A2714C /* PlaceDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6D11E7236CD10500A2714C /* PlaceDetailsViewController.swift */; };
 		0D838866237881CE00F8618A /* ServerInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D838865237881CE00F8618A /* ServerInfo.plist */; };
 		0D88B12B2380EC740017A4DA /* PlacesiOSApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0D88B1292380EC740017A4DA /* PlacesiOSApp.xcdatamodeld */; };
+		0D88B12D2384DC030017A4DA /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D88B12C2384DC030017A4DA /* MapViewController.swift */; };
+		0D88B12F2384DCB00017A4DA /* PlaceAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D88B12E2384DCB00017A4DA /* PlaceAnnotation.swift */; };
 		0DFFA886236E1DB100FB9CB2 /* DistanceCalcViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFFA885236E1DB100FB9CB2 /* DistanceCalcViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -47,12 +50,15 @@
 		0D38797C235D2C7900AD7BDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0D387985235DE43700AD7BDA /* PlaceDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDescription.swift; sourceTree = "<group>"; };
 		0D5DB28523776BE300FA256C /* PlaceLibraryStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceLibraryStub.swift; sourceTree = "<group>"; };
-		0D6D11DA236A04C600A2714C /* PlaceLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceLibrary.swift; sourceTree = "<group>"; };
+		0D5F0E6F23877572003D09A1 /* SyncViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncViewController.swift; sourceTree = "<group>"; };
+		0D6D11DA236A04C600A2714C /* PlaceCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCoreData.swift; sourceTree = "<group>"; };
 		0D6D11E3236B6DE400A2714C /* PlacesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesTableViewController.swift; sourceTree = "<group>"; };
 		0D6D11E5236BAAEC00A2714C /* places.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = places.json; sourceTree = "<group>"; };
 		0D6D11E7236CD10500A2714C /* PlaceDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDetailsViewController.swift; sourceTree = "<group>"; };
 		0D838865237881CE00F8618A /* ServerInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ServerInfo.plist; sourceTree = "<group>"; };
 		0D88B12A2380EC740017A4DA /* PlacesiOSApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PlacesiOSApp.xcdatamodel; sourceTree = "<group>"; };
+		0D88B12C2384DC030017A4DA /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		0D88B12E2384DCB00017A4DA /* PlaceAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceAnnotation.swift; sourceTree = "<group>"; };
 		0DFFA885236E1DB100FB9CB2 /* DistanceCalcViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceCalcViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -119,10 +125,11 @@
 		0D6D11DC236A04DD00A2714C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				0D88B12E2384DCB00017A4DA /* PlaceAnnotation.swift */,
 				0D88B1292380EC740017A4DA /* PlacesiOSApp.xcdatamodeld */,
 				0D6D11E5236BAAEC00A2714C /* places.json */,
 				0D387985235DE43700AD7BDA /* PlaceDescription.swift */,
-				0D6D11DA236A04C600A2714C /* PlaceLibrary.swift */,
+				0D6D11DA236A04C600A2714C /* PlaceCoreData.swift */,
 				0D5DB28523776BE300FA256C /* PlaceLibraryStub.swift */,
 			);
 			path = Model;
@@ -135,6 +142,8 @@
 				0D6D11E3236B6DE400A2714C /* PlacesTableViewController.swift */,
 				0D6D11E7236CD10500A2714C /* PlaceDetailsViewController.swift */,
 				0DFFA885236E1DB100FB9CB2 /* DistanceCalcViewController.swift */,
+				0D88B12C2384DC030017A4DA /* MapViewController.swift */,
+				0D5F0E6F23877572003D09A1 /* SyncViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -244,13 +253,16 @@
 			files = (
 				0D88B12B2380EC740017A4DA /* PlacesiOSApp.xcdatamodeld in Sources */,
 				0D6D11E8236CD10500A2714C /* PlaceDetailsViewController.swift in Sources */,
+				0D88B12F2384DCB00017A4DA /* PlaceAnnotation.swift in Sources */,
 				0D5DB28623776BE300FA256C /* PlaceLibraryStub.swift in Sources */,
+				0D88B12D2384DC030017A4DA /* MapViewController.swift in Sources */,
 				0D6D11E1236A330100A2714C /* PlaceDescription.swift in Sources */,
-				0D6D11E0236A32FB00A2714C /* PlaceLibrary.swift in Sources */,
+				0D6D11E0236A32FB00A2714C /* PlaceCoreData.swift in Sources */,
 				0D387968235D2C7800AD7BDA /* ViewController.swift in Sources */,
 				0DFFA886236E1DB100FB9CB2 /* DistanceCalcViewController.swift in Sources */,
 				0D387966235D2C7800AD7BDA /* AppDelegate.swift in Sources */,
 				0D6D11E4236B6DE400A2714C /* PlacesTableViewController.swift in Sources */,
+				0D5F0E7023877572003D09A1 /* SyncViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
