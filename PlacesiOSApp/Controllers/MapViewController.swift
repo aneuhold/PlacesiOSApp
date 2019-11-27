@@ -14,13 +14,13 @@ import MapKit
  * prohibited and reserved to the author.<br>
  * <br>
  *
- * Purpose: CHANGE ME
+ * Purpose: The main controller for the map interface.
  *
  * SER 423
  * see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version November 17, 2019
+ * @version November 27, 2019
  */
 class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
   let regionRadius: CLLocationDistance = 50000 // roughly 30 miles

@@ -13,13 +13,14 @@ import UIKit
  * prohibited and reserved to the author.<br>
  * <br>
  *
- * Purpose: CHANGE ME
+ * Purpose: This controls the view for the syncing options to the remote JSON
+ * RPC server.
  *
  * SER 423
  * see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version November 17, 2019
+ * @version November 27, 2019
  */
 class SyncViewController: UIViewController {
   var viewController: ViewController?
