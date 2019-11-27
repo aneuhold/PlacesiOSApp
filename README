@@ -1,0 +1,5 @@
+Run the application through Xcode or a device locally
+
+The Core Data is populated in the software with the original places.json file. This was easier than doing it with raw code and seemed much cleaner. All edits are made entirely through Core Data after that point. 
+
+When editing a place, make sure to press "Done" at the bottom of the screen in order for the place data to save. Pressing the back arrow assumes a cancellation of the edits.
