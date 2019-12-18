@@ -1,5 +1,6 @@
 
 import UIKit
+import CoreData
 
 /**
  * Copyright 2019 Anton G Neuhold Jr,
@@ -15,14 +16,13 @@ import UIKit
  * <br>
  *
  * Purpose: Provides the view controller for the UITableView. This populates
- * data from a remote JSON RPC server. If there is an error in the connection,
- * currently it will hang on "Loading".
+ * data from Core Data.
  *
  * SER 423
  * see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version November 10, 2019
+ * @version November 17, 2019
  */
 class PlacesTableViewController: UITableViewController {
   var viewController: ViewController?
@@ -38,6 +38,7 @@ class PlacesTableViewController: UITableViewController {
     
     // Set a reference to this tableView in the main ViewController so that changes can be made if needed.
     viewController?.tableViewController = self
+    viewController?.placeCoreData?.tableView = self.tableView
     
     // Add an edit button, which is handled by the func table view editing forRowAt
     self.navigationItem.leftBarButtonItem = self.editButtonItem
@@ -57,15 +58,10 @@ class PlacesTableViewController: UITableViewController {
       
       let indexPath = self.tableView.indexPathForSelectedRow!
       
-      // Set the temporary information inside the new place details view
-      let tempPlaceDescription: PlaceDescription = PlaceDescription()
-      tempPlaceDescription.name = "Loading Place Details..."
-      placeDetailsViewController.placeDescription = tempPlaceDescription
-      placeDetailsViewController.currentPlaceIndex = indexPath.row
-      
-      // Initiate the actual call to retrieved the placeDescription
-      placeDetailsViewController.placeName =
-        viewController?.placeNames[indexPath.row]
+      // Set the information inside the new place details view
+      let placeName = viewController?.placeCoreData?.getNameOfPlaceAt(indexPath.row)
+      placeDetailsViewController.placeDescription = viewController?.placeCoreData?.getPlaceDescriptionWithName(placeName!)
+      placeDetailsViewController.placeIndex = indexPath.row
     }
   }
   
@@ -82,25 +78,15 @@ class PlacesTableViewController: UITableViewController {
     // setup the OK action and provide a closure to be executed when/if OK selected
     promptND.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (action) -> Void in
       
-      // Want to provide default values for name
-      let newPlaceName:String = (promptND.textFields?[0].text == "") ?
+      // Provide default values for name
+      let newPlaceName: String = (promptND.textFields?[0].text == "") ?
         "unknown" : (promptND.textFields?[0].text)!
 
-      // Create the new place
-      let newPlace:PlaceDescription = PlaceDescription()
-      newPlace.name = newPlaceName
+      // Create the new place. This automatically refreshes the tableView data
+      let newPlaceDescription: PlaceDescription = PlaceDescription()
+      newPlaceDescription.name = newPlaceName
+      self.viewController?.placeCoreData?.addPlace(newPlaceDescription: newPlaceDescription)
       
-      let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: (self.viewController?.urlString)!)
-      let _:Bool = placesConnect.add(placeDescription: newPlace, callback: {(res: String, err: String?) -> Void in
-        if err != nil {
-          NSLog(err!)
-        }else{
-          NSLog(res)
-          self.viewController?.populatePlaceNames()
-        }
-      })
-      //self.viewController?.places.addPlace(newPlaceDescription: newPlace)
-      self.tableView.reloadData()
     }))
     promptND.addTextField(configurationHandler: {(textField: UITextField!) in
       textField.placeholder = "Place Name"

@@ -1,4 +1,5 @@
 import UIKit
+import CoreData
 
 /**
  * Copyright 2019 Anton G Neuhold Jr,
@@ -20,85 +21,22 @@ import UIKit
  * see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version November 10, 2019
+ * @version November 17, 2019
  */
 class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDataSource {
   
-  // var places: PlaceLibrary = PlaceLibrary()
-  var placeNames: [String] = [String]()
+  /**
+   The reference to tableViewController is set within the PlacesTableViewController
+   class.
+   */
   var tableViewController: PlacesTableViewController?
-  
-  var urlString = "http://127.0.0.1:8080"
+  var placeCoreData: PlaceCoreData?
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    placeNames.append("Loading places...")
-    urlString = generateURL()
-    populatePlaceNames()
-  }
-  
-  func generateURL () -> String {
-    var serverhost:String = "localhost"
-    var jsonrpcport:String = "8080"
-    var serverprotocol:String = "http"
-    // access and log all of the app settings from the settings bundle resource
-    if let path = Bundle.main.path(forResource: "ServerInfo", ofType: "plist"){
-      // defaults
-      if let dict = NSDictionary(contentsOfFile: path) as? [String:AnyObject] {
-        serverhost = (dict["server_host"] as? String)!
-        jsonrpcport = (dict["jsonrpc_port"] as? String)!
-        serverprotocol = (dict["server_protocol"] as? String)!
-      }
+    placeCoreData = PlaceCoreData(){
+      self.tableViewController?.tableView.reloadData()
     }
-    print("setURL returning: \(serverprotocol)://\(serverhost):\(jsonrpcport)")
-    return "\(serverprotocol)://\(serverhost):\(jsonrpcport)"
-  }
-  
-  /**
-   Populates the placeNames variable using the PlaceLibraryStub class.
-   */
-  func populatePlaceNames() {
-    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
-    let _:Bool = placesConnect.getNames{(res: String, err: String?) -> Void in
-      if err != nil {
-        NSLog(err!)
-      }else{
-        NSLog(res)
-        if let data: Data = res.data(using: String.Encoding.utf8){
-          do{
-            let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:AnyObject]
-            self.placeNames = (dict!["result"] as? [String])!
-            self.tableViewController?.tableView.reloadData()
-          } catch {
-            print("unable to convert to dictionary")
-          }
-        }
-      }
-    }
-  }
-  
-  func modifyPlace(placeDescription: PlaceDescription) {
-    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
-    let _:Bool = placesConnect.remove(name: placeDescription.name, callback: {(res: String, err: String?) -> Void in
-      if err != nil {
-        NSLog(err!)
-      }else{
-        NSLog(res)
-        self.addAfterRemovingPlace(placeDescription: placeDescription)
-      }
-    })
-  }
-  
-  private func addAfterRemovingPlace(placeDescription: PlaceDescription) {
-    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
-    let _:Bool = placesConnect.add(placeDescription: placeDescription, callback: {(res: String, err: String?) -> Void in
-      if err != nil {
-        NSLog(err!)
-      }else{
-        NSLog(res)
-      }
-    })
   }
   
   // MARK: - UIPickerViewDataSource methods
@@ -108,7 +46,7 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
   }
   
   func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    return placeNames.count
+    return (placeCoreData?.size())!
   }
   
   // MARK: - UITableViewDataSource methods
@@ -118,14 +56,14 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
    it will return the number of entries in the place library.
    */
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return placeNames.count
+    return (placeCoreData?.size())!
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     // Get and configure the cell...
     let cell = tableView.dequeueReusableCell(withIdentifier: "placeCell", for: indexPath)
-    cell.textLabel?.text = placeNames[indexPath.row]
+    cell.textLabel?.text = placeCoreData?.getNameOfPlaceAt(indexPath.row)
     return cell
   }
   
@@ -136,28 +74,12 @@ class ViewController: UITabBarController, UITableViewDataSource, UIPickerViewDat
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
     print("tableView editing row at: \(indexPath.row)")
     if editingStyle == .delete {
-      
-      // Get a reference to the place name
-      let placeName: String = placeNames[indexPath.row]
-      
-      // Remove the item locally
-      placeNames.remove(at: indexPath.row)
-      
-      // Remove the item on the server
-      let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: urlString)
-      let _:Bool = placesConnect.remove(name: placeName, callback: {(res: String, err: String?) -> Void in
-        if err != nil {
-          NSLog(err!)
-        }else{
-          NSLog(res)
-        }
-      })
+      placeCoreData?.deletePlaceAt(indexPath.row)
       
       // Let the tableView know what is being deleted.
       tableView.deleteRows(at: [indexPath], with: .fade)
       // don't need to reload data, using delete to make update
     }
   }
-  
 }
 

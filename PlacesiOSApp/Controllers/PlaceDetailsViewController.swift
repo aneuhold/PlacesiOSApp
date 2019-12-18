@@ -1,4 +1,5 @@
 import UIKit
+import CoreData
 
 /**
  * Copyright 2019 Anton G Neuhold Jr,
@@ -14,24 +15,20 @@ import UIKit
  * <br>
  *
  * Purpose: Provides the view controller for a specific place's details screen.
- * This information is populated from a remote JSON RPC server.
+ * This information is populated from Core Data.
  *
  * SER 423
  * see http://quay.poly.asu.edu/Mobile/
  * @author Anton Neuhold mailto:aneuhold@asu.edu
  *         Software Engineering
- * @version November 10, 2019
+ * @version November 17, 2019
  */
 class PlaceDetailsViewController: UIViewController {
-  var placeDescription: PlaceDescription?
+  var place: NSManagedObject?
   var viewController: ViewController?
-  var placeName: String?
-  
-  /*
-   This is the index of the placeDescription within the places object at the
-   top level view controller.
-   */
-  var currentPlaceIndex: Int?
+  var placeCoreData: PlaceCoreData?
+  var placeDescription: PlaceDescription?
+  var placeIndex: Int?
   
   @IBOutlet weak var placeNameTextField: UITextField!
   @IBOutlet weak var placeDescriptionTextField: UITextField!
@@ -48,8 +45,9 @@ class PlaceDetailsViewController: UIViewController {
     
     // Create a reference to the main view controller. For Data!
     viewController = tabBarController as? ViewController
+    placeCoreData = viewController?.placeCoreData!
     
-    getPlaceDescription()
+    hydratePlaceDescriptionViews()
 
     // Do something about the keyboard hiding the content
     let notificationCenter = NotificationCenter.default
@@ -59,27 +57,6 @@ class PlaceDetailsViewController: UIViewController {
     notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard),
                                    name: UIResponder.keyboardWillChangeFrameNotification,
                                    object: nil)
-  }
-  
-  func getPlaceDescription() {
-    let placesConnect: PlaceLibraryStub = PlaceLibraryStub(urlString: viewController!.urlString)
-    let _:Bool = placesConnect.get(name: placeName!, callback: {(res: String, err: String?) -> Void in
-      if err != nil {
-        NSLog(err!)
-      }else{
-        NSLog(res)
-        if let data: Data = res.data(using: String.Encoding.utf8){
-          do{
-            let dict = try JSONSerialization.jsonObject(with: data,options:.mutableContainers) as?[String:AnyObject]
-            let aDict:[String:AnyObject] = (dict!["result"] as? [String:AnyObject])!
-            self.placeDescription = PlaceDescription(jsonObjDict: aDict)
-            self.hydratePlaceDescriptionViews()
-          } catch {
-            print("unable to convert to dictionary")
-          }
-        }
-      }
-    })
   }
   
   @objc func adjustForKeyboard(notification: Notification) {
@@ -119,8 +96,8 @@ class PlaceDetailsViewController: UIViewController {
     placeDescription?.latitude = (placeLatitudeTextField.text! as NSString).doubleValue
     placeDescription?.longitude = (placeLongitudeTextField.text! as NSString).doubleValue
 
-    // Modify the place on the server by deleting it first, then adding it back
-    viewController?.modifyPlace(placeDescription: self.placeDescription!)
+    // Save the information to Core Data
+    placeCoreData!.setPlaceAt(placeIndex!, newPlaceDescription: placeDescription!)
     
     // Dismiss this view controller
     self.navigationController?.popViewController(animated: true)
