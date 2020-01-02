@@ -1,6 +1,7 @@
 To run the application:
-1. Start up the instructor provided JSON RPC server, if it isn't started already
-2. Run the application through Xcode or a device locally
+
+# Start up the instructor provided JSON RPC server, if it isn't started already
+# Run the application through Xcode or a device locally
 
 To change the server location, you can edit the "ServerInfo.plist" file.
 
